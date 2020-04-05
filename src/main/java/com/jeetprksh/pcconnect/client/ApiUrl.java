@@ -2,7 +2,9 @@ package com.jeetprksh.pcconnect.client;
 
 enum ApiUrl {
 
-  VERIFY_USER("/user/code/verify?name=%s&encoded=%s");
+  VERIFY_USER("/user/code/verify?name=%s&encoded=%s"),
+  GET_ITEMS("/items"),
+  GET_ITEMS_PATH("/items?root=%s&path=%s");
 
   private String url;
 

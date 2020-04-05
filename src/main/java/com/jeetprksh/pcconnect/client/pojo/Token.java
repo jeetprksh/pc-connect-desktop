@@ -23,5 +23,11 @@ public class Token {
     this.token = token;
   }
 
+  @Override
+  public String toString() {
+    return "Token{" +
+            "token='" + token + '\'' +
+            '}';
+  }
 }
 

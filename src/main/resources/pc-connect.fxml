@@ -3,13 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="TOP_CENTER" hgap="10" minHeight="500.0" minWidth="700.0"
-          prefHeight="500.0" prefWidth="700.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.Controller">
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
@@ -21,5 +20,11 @@
             <PasswordField fx:id="code" layoutX="370.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Code" />
             <Button fx:id="connect" graphicTextGap="12.0" layoutX="480.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#connectServer" prefHeight="40.0" prefWidth="100.0" text="Connect" textAlignment="CENTER" />
          </children></Pane>
+      <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <children>
+            <ListView fx:id="listView" layoutX="112.0" prefHeight="200.0" prefWidth="480.0" />
+            <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
+         </children>
+      </Pane>
    </children>
 </GridPane>
