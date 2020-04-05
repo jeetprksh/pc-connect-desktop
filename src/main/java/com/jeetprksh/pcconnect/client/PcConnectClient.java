@@ -5,6 +5,7 @@ import com.jeetprksh.pcconnect.client.pojo.Item;
 import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
 import com.jeetprksh.pcconnect.client.pojo.TokenResponse;
 
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +65,27 @@ public class PcConnectClient {
   public List<Item> getItems(String rootId, String path) throws Exception {
     logger.info("Fetching the list of Items for " + rootId + " " + path);
     return getItems(createBaseUrl() + String.format(ApiUrl.GET_ITEMS_PATH.getUrl(), rootId, path));
+  }
+
+  public InputStream downloadItem(String rootAlias, String path) throws Exception {
+    logger.info("Downloading the Item " + rootAlias + " " + path);
+    Response response = null;
+    try {
+      Request request = getDefaultRequestBuilder()
+              .url(createBaseUrl() + String.format(ApiUrl.DOWNLOAD_ITEM.getUrl(), rootAlias, path))
+              .get()
+              .addHeader("token", this.token)
+              .build();
+      response = client.newCall(request).execute();
+      if (response.isSuccessful()) {
+        return response.body().byteStream();
+      } else {
+        throw new Exception(response.message());
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw e;
+    }
   }
 
   private List<Item> getItems(String url) throws Exception {

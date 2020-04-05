@@ -3,6 +3,11 @@ package com.jeetprksh.pcconnect;
 import com.jeetprksh.pcconnect.client.PcConnectClient;
 import com.jeetprksh.pcconnect.client.pojo.Item;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +50,25 @@ public class Controller {
     // TODO
   }
 
+  public void downloadItem() throws Exception {
+    FileOutputStream outputStream = null;
+    InputStream stream = null;
+    try {
+      Item item = listView.getSelectionModel().getSelectedItem();
+      stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
+      outputStream = new FileOutputStream(new File("C:\\my-projects\\test.jpg")); // TODO pick from settings
+      outputStream.write(IOUtils.toByteArray(stream));
+    } finally {
+      if (!Objects.isNull(outputStream)) {
+        outputStream.flush();
+        outputStream.close();
+      }
+      if (!Objects.isNull(stream)) {
+        stream.close();
+      }
+    }
+  }
+
   private List<Item> getItems(String rootId, String path) throws Exception {
     return getClient().getItems(rootId, path);
   }
@@ -59,7 +83,7 @@ public class Controller {
   }
 
   private void initialiseList() {
-    this.listView.setOnMouseClicked((event) -> {
+    this.listView.setOnMouseClicked(event -> {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
         Item selectedItem = listView.getSelectionModel().getSelectedItem();
         refreshList(selectedItem.getRootAlias(), selectedItem.getPath());

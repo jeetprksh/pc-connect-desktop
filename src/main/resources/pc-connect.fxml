@@ -23,6 +23,7 @@
       <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
             <ListView fx:id="listView" layoutX="112.0" prefHeight="200.0" prefWidth="480.0" />
+            <Button fx:id="download" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" text="Download" onMouseClicked="#downloadItem"/>
             <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
          </children>
       </Pane>
