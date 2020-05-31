@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect;
+package com.jeetprksh.pcconnect.controller;
 
 import com.jeetprksh.pcconnect.client.PcConnectClient;
 import com.jeetprksh.pcconnect.client.pojo.Item;
@@ -24,9 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 
-public class Controller {
+public class RootController {
 
-  private final Logger logger = Logger.getLogger(Controller.class.getName());
+  private final Logger logger = Logger.getLogger(RootController.class.getName());
 
   @FXML private TextField ipAddress;
   @FXML private TextField port;
