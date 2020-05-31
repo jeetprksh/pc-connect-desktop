@@ -17,15 +17,15 @@ import okhttp3.Response;
 
 public class PcConnectClient {
 
-  private Logger logger = Logger.getLogger(PcConnectClient.class.getName());
+  private final Logger logger = Logger.getLogger(PcConnectClient.class.getName());
 
   private final String ipAddress;
   private final String port;
   private final String code;
 
-  private OkHttpClient client = new OkHttpClient().newBuilder().build();
+  private final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-  private ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
   private String token;
 
@@ -112,7 +112,7 @@ public class PcConnectClient {
   private String createBaseUrl() {
     StringBuilder url = new StringBuilder();
     return url.append("http://")
-            .append(ipAddress + ":" + port)
+            .append(ipAddress).append(":").append(port)
             .toString();
   }
 

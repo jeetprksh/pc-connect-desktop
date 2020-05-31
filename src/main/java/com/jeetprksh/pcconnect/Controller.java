@@ -10,16 +10,23 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
 
 public class Controller {
+
+  private final Logger logger = Logger.getLogger(Controller.class.getName());
 
   @FXML private TextField ipAddress;
   @FXML private TextField port;
@@ -66,6 +73,18 @@ public class Controller {
       if (!Objects.isNull(stream)) {
         stream.close();
       }
+    }
+  }
+
+  public void openSettings() {
+    try {
+      Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
+      Stage stage = new Stage();
+      stage.setTitle("Settings");
+      stage.setScene(new Scene(root));
+      stage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

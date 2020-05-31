@@ -7,7 +7,7 @@ enum ApiUrl {
   GET_ITEMS_PATH("/items?root=%s&path=%s"),
   DOWNLOAD_ITEM("/item/download?root=%s&path=%s&download");
 
-  private String url;
+  private final String url;
 
   ApiUrl(String url) {
     this.url = url;
