@@ -14,18 +14,11 @@ import java.util.Map;
 public class SettingsDao extends CommonDao {
 
   public Integer save(SettingDTO dto) throws HibernateException {
-    return saveEntity(dto).intValue();
+    return saveEntity(dto);
   }
 
   public void update(SettingDTO dto) throws HibernateException {
     updateEntity(dto);
-  }
-
-  public SettingDTO findByName(String name) throws HibernateException {
-    String namedQuery = "setting.findByName";
-    Map<String, String> param = new HashMap<>();
-    param.put("name", name);
-    return getSingle(namedQuery, SettingDTO.class, param);
   }
 
   public List<SettingDTO> findAll() throws HibernateException {
