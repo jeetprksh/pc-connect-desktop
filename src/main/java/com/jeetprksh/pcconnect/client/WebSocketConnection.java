@@ -25,7 +25,7 @@ public class WebSocketConnection extends WebSocketListener {
   }
 
   @Override
-  public void onOpen(WebSocket webSocket, Response response) {
+  public void onOpen(@NotNull WebSocket webSocket, Response response) {
     logger.info("ON OPEN :: " + response.toString());
   }
 

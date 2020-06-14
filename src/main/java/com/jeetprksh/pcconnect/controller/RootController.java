@@ -100,10 +100,8 @@ public class RootController {
   private PcConnectClient getClient() {
     if (Objects.isNull(this.client)) {
       this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText(), this.code.getText());
-      return this.client;
-    } else {
-      return this.client;
     }
+    return this.client;
   }
 
   private void initialiseList() {

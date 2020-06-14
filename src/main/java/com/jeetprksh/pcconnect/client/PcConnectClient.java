@@ -61,7 +61,8 @@ public class PcConnectClient {
 
   private void initializeSocket() {
     socketConnection =  new WebSocketConnection(ipAddress, port, token);
-    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket").build();
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
+            .addHeader("token", this.token).build();
     client.newWebSocket(wsRequest, socketConnection);
   }
 
