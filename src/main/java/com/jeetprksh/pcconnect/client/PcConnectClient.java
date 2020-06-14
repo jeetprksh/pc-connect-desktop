@@ -19,15 +19,16 @@ public class PcConnectClient {
 
   private final Logger logger = Logger.getLogger(PcConnectClient.class.getName());
 
+  private final OkHttpClient client = new OkHttpClient().newBuilder().build();
+  private final ObjectMapper mapper = new ObjectMapper();
+
   private final String ipAddress;
   private final String port;
   private final String code;
 
-  private final OkHttpClient client = new OkHttpClient().newBuilder().build();
-
-  private final ObjectMapper mapper = new ObjectMapper();
-
   private String token;
+
+  private WebSocketConnection socketConnection;
 
   private PcConnectClient(String ipAddress, String port, String code) {
     this.ipAddress = ipAddress;
@@ -47,6 +48,7 @@ public class PcConnectClient {
       if (response.isSuccessful()) {
         logger.fine(name + " got verified");
         this.token = tokenResponse.getToken().getToken();
+        initializeSocket();
       } else {
         logger.severe("Verification failed for " + name);
         throw new Exception(tokenResponse.getMessage());
@@ -55,6 +57,12 @@ public class PcConnectClient {
       if (!Objects.isNull(response))
         response.close();
     }
+  }
+
+  private void initializeSocket() {
+    socketConnection =  new WebSocketConnection(ipAddress, port, token);
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket").build();
+    client.newWebSocket(wsRequest, socketConnection);
   }
 
   public List<Item> getRootItems() throws Exception {

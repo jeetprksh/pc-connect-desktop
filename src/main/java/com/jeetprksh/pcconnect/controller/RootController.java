@@ -33,7 +33,8 @@ public class RootController {
   @FXML private TextField name;
   @FXML private PasswordField code;
   @FXML private Button connect;
-  @FXML private ListView<Item> listView = new ListView<>();
+  @FXML private ListView<Item> items = new ListView<>();
+  @FXML private ListView<Item> users = new ListView<>();
 
   private PcConnectClient client;
 
@@ -50,7 +51,7 @@ public class RootController {
 
   public void renderRootDirectories() throws Exception {
     List<Item> items = getClient().getRootItems();
-    listView.getItems().addAll(items);
+    this.items.getItems().addAll(items);
   }
 
   public void renderParentDirectory() {
@@ -61,7 +62,7 @@ public class RootController {
     FileOutputStream outputStream = null;
     InputStream stream = null;
     try {
-      Item item = listView.getSelectionModel().getSelectedItem();
+      Item item = items.getSelectionModel().getSelectedItem();
       stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
       outputStream = new FileOutputStream(new File("C:\\my-projects\\test.jpg")); // TODO pick from settings
       outputStream.write(IOUtils.toByteArray(stream));
@@ -88,6 +89,10 @@ public class RootController {
     }
   }
 
+  public void sendItemToUser() {
+
+  }
+
   private List<Item> getItems(String rootId, String path) throws Exception {
     return getClient().getItems(rootId, path);
   }
@@ -102,9 +107,9 @@ public class RootController {
   }
 
   private void initialiseList() {
-    this.listView.setOnMouseClicked(event -> {
+    this.items.setOnMouseClicked(event -> {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-        Item selectedItem = listView.getSelectionModel().getSelectedItem();
+        Item selectedItem = items.getSelectionModel().getSelectedItem();
         refreshList(selectedItem.getRootAlias(), selectedItem.getPath());
       }
     });
@@ -113,8 +118,8 @@ public class RootController {
   private void refreshList(String rootAlias, String path) {
     try {
       List<Item> items = getItems(rootAlias, path);
-      listView.getItems().clear();
-      listView.getItems().addAll(items);
+      this.items.getItems().clear();
+      this.items.getItems().addAll(items);
     } catch (Exception e) {
       e.printStackTrace();
       showError(e.getLocalizedMessage());

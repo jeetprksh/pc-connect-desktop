@@ -3,11 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="275.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="490.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
    </rowConstraints>
@@ -18,14 +19,21 @@
             <TextField fx:id="port" cache="true" layoutX="150.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Port" />
             <TextField fx:id="name" layoutX="280.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Name" />
             <PasswordField fx:id="code" layoutX="370.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Code" />
-            <Button fx:id="connect" graphicTextGap="12.0" layoutX="480.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#connectServer" prefHeight="40.0" prefWidth="100.0" text="Connect" textAlignment="CENTER" />
+            <Button fx:id="connect" graphicTextGap="12.0" layoutX="485.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#connectServer" prefHeight="40.0" prefWidth="100.0" text="Connect" textAlignment="CENTER" />
          </children></Pane>
       <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
-            <ListView fx:id="listView" layoutX="112.0" prefHeight="200.0" prefWidth="480.0" />
+            <ListView fx:id="items" layoutX="112.0" prefHeight="200.0" prefWidth="475.0" />
             <Button fx:id="download" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#downloadItem" text="Download" />
             <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
             <Button fx:id="settings" layoutX="20.0" layoutY="165.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
+         </children>
+      </Pane>
+      <Pane prefHeight="240.0" prefWidth="200.0" GridPane.rowIndex="2">
+         <children>
+            <ListView fx:id="users" layoutX="112.0" layoutY="27.0" prefHeight="200.0" prefWidth="475.0" />
+            <Button fx:id="send" layoutX="20.0" layoutY="27.0" mnemonicParsing="false" onMouseClicked="#sendItemToUser" text="Send" />
+            <Label layoutX="20.0" layoutY="4.0" text="People on your Network:" />
          </children>
       </Pane>
    </children>
