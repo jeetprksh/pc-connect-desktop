@@ -40,8 +40,8 @@ public class RootController {
 
   public void connectServer() {
     try {
-      getClient().verifyUser(this.name.getText());
-      initialiseList();
+      getClient().verifyUser(this.name.getText(), this.code.getText());
+      initialiseItems();
       renderRootDirectories();
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -99,12 +99,12 @@ public class RootController {
 
   private PcConnectClient getClient() {
     if (Objects.isNull(this.client)) {
-      this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText(), this.code.getText());
+      this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText());
     }
     return this.client;
   }
 
-  private void initialiseList() {
+  private void initialiseItems() {
     this.items.setOnMouseClicked(event -> {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
         Item selectedItem = items.getSelectionModel().getSelectedItem();

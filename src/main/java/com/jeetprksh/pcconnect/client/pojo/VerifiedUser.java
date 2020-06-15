@@ -1,0 +1,32 @@
+package com.jeetprksh.pcconnect.client.pojo;
+
+public class VerifiedUser {
+
+  private final String ipAddress;
+  private final String port;
+  private final String name;
+  private final String token;
+
+  public VerifiedUser(String ipAddress, String port, String name, String token) {
+    this.ipAddress = ipAddress;
+    this.port = port;
+    this.name = name;
+    this.token = token;
+  }
+
+  public String getIpAddress() {
+    return ipAddress;
+  }
+
+  public String getPort() {
+    return port;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getToken() {
+    return token;
+  }
+}

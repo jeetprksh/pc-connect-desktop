@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeetprksh.pcconnect.client.pojo.Item;
 import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
 import com.jeetprksh.pcconnect.client.pojo.TokenResponse;
+import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 
 import java.io.InputStream;
 import java.util.Base64;
@@ -24,19 +25,15 @@ public class PcConnectClient {
 
   private final String ipAddress;
   private final String port;
-  private final String code;
 
-  private String token;
+  private VerifiedUser verifiedUser;
 
-  private WebSocketConnection socketConnection;
-
-  private PcConnectClient(String ipAddress, String port, String code) {
+  private PcConnectClient(String ipAddress, String port) {
     this.ipAddress = ipAddress;
     this.port = port;
-    this.code = code;
   }
 
-  public void verifyUser(String name) throws Exception {
+  public void verifyUser(String name, String code) throws Exception {
     logger.info("Verifying User " + name);
     Response response = null;
     try {
@@ -47,7 +44,7 @@ public class PcConnectClient {
       TokenResponse tokenResponse = mapper.readValue(response.body().byteStream(), TokenResponse.class);
       if (response.isSuccessful()) {
         logger.fine(name + " got verified");
-        this.token = tokenResponse.getToken().getToken();
+        this.verifiedUser = new VerifiedUser(ipAddress, port, name, tokenResponse.getToken().getToken());
         initializeSocket();
       } else {
         logger.severe("Verification failed for " + name);
@@ -57,13 +54,6 @@ public class PcConnectClient {
       if (!Objects.isNull(response))
         response.close();
     }
-  }
-
-  private void initializeSocket() {
-    socketConnection =  new WebSocketConnection(ipAddress, port, token);
-    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
-            .addHeader("token", this.token).build();
-    client.newWebSocket(wsRequest, socketConnection);
   }
 
   public List<Item> getRootItems() throws Exception {
@@ -78,12 +68,12 @@ public class PcConnectClient {
 
   public InputStream downloadItem(String rootAlias, String path) throws Exception {
     logger.info("Downloading the Item " + rootAlias + " " + path);
-    Response response = null;
+    Response response;
     try {
       Request request = getDefaultRequestBuilder()
               .url(createBaseUrl() + String.format(ApiUrl.DOWNLOAD_ITEM.getUrl(), rootAlias, path))
               .get()
-              .addHeader("token", this.token)
+              .addHeader("token", this.verifiedUser.getToken())
               .build();
       response = client.newCall(request).execute();
       if (response.isSuccessful()) {
@@ -103,7 +93,7 @@ public class PcConnectClient {
       Request request = getDefaultRequestBuilder()
               .url(url)
               .get()
-              .addHeader("token", this.token)
+              .addHeader("token", this.verifiedUser.getToken())
               .build();
       response = client.newCall(request).execute();
       ItemResponse itemResponse = mapper.readValue(response.body().byteStream(), ItemResponse.class);
@@ -118,6 +108,13 @@ public class PcConnectClient {
     }
   }
 
+  private void initializeSocket() {
+    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
+            .addHeader("token", this.verifiedUser.getToken()).build();
+    client.newWebSocket(wsRequest, socketConnection);
+  }
+
   private String createBaseUrl() {
     StringBuilder url = new StringBuilder();
     return url.append("http://")
@@ -130,8 +127,8 @@ public class PcConnectClient {
             .addHeader("Content-Type", "application/json");
   }
 
-  public static PcConnectClient clientFactory(String ipAddress, String port, String code) {
-    return new PcConnectClient(ipAddress, port, code);
+  public static PcConnectClient clientFactory(String ipAddress, String port) {
+    return new PcConnectClient(ipAddress, port);
   }
 
 }

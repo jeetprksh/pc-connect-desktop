@@ -1,5 +1,10 @@
 package com.jeetprksh.pcconnect.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jeetprksh.pcconnect.client.pojo.Message;
+import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,19 +19,22 @@ public class WebSocketConnection extends WebSocketListener {
 
   private final Logger logger = Logger.getLogger(WebSocketConnection.class.getName());
 
-  private final String ipAddress;
-  private final String port;
-  private final String token;
+  private final ObjectMapper mapper = new ObjectMapper();
+  private final VerifiedUser verifiedUser;
 
-  public WebSocketConnection(String ipAddress, String port, String token) {
-    this.ipAddress = ipAddress;
-    this.port = port;
-    this.token = token;
+  public WebSocketConnection(VerifiedUser verifiedUser) {
+    this.verifiedUser = verifiedUser;
   }
 
   @Override
-  public void onOpen(@NotNull WebSocket webSocket, Response response) {
-    logger.info("ON OPEN :: " + response.toString());
+  public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
+    logger.info("WebSocket opened for " + verifiedUser.getName());
+    try {
+      Message message = new Message("ONLINE", verifiedUser.getName());
+      webSocket.send(mapper.writeValueAsString(message));
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
