@@ -3,7 +3,8 @@ package com.jeetprksh.pcconnect.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeetprksh.pcconnect.client.pojo.Item;
 import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
-import com.jeetprksh.pcconnect.client.pojo.TokenResponse;
+import com.jeetprksh.pcconnect.client.pojo.User;
+import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 
 import java.io.InputStream;
@@ -41,14 +42,15 @@ public class PcConnectClient {
       String url = createBaseUrl() + String.format(ApiUrl.VERIFY_USER.getUrl(), name, encodedCode);
       Request request = getDefaultRequestBuilder().url(url).get().build();
       response = client.newCall(request).execute();
-      TokenResponse tokenResponse = mapper.readValue(response.body().byteStream(), TokenResponse.class);
+      VerifyResponse verifyResponse = mapper.readValue(response.body().byteStream(), VerifyResponse.class);
       if (response.isSuccessful()) {
         logger.fine(name + " got verified");
-        this.verifiedUser = new VerifiedUser(ipAddress, port, name, tokenResponse.getToken().getToken());
+        User user = verifyResponse.getUser();
+        this.verifiedUser = new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
         initializeSocket();
       } else {
         logger.severe("Verification failed for " + name);
-        throw new Exception(tokenResponse.getMessage());
+        throw new Exception(verifyResponse.getMessage());
       }
     } finally {
       if (!Objects.isNull(response))

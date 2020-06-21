@@ -10,14 +10,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   "message",
   "data"
 })
-public class TokenResponse {
+public class VerifyResponse {
 
   @JsonProperty("status")
   private boolean status;
   @JsonProperty("message")
   private String message;
   @JsonProperty("data")
-  private Token token;
+  private User user;
 
   @JsonProperty("status")
   public boolean isStatus() {
@@ -40,13 +40,13 @@ public class TokenResponse {
   }
 
   @JsonProperty("data")
-  public Token getToken() {
-    return token;
+  public User getUser() {
+    return user;
   }
 
   @JsonProperty("data")
-  public void setToken(Token token) {
-    this.token = token;
+  public void setUser(User user) {
+    this.user = user;
   }
 
 }
