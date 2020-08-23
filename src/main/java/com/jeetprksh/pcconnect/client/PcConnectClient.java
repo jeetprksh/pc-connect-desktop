@@ -92,6 +92,18 @@ public class PcConnectClient {
     }
   }
 
+  public WebSocketConnection initializeSocket() {
+    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
+            .addHeader("token", this.verifiedUser.getToken()).build();
+    WebSocket webSocket = client.newWebSocket(wsRequest, socketConnection);
+    return socketConnection;
+  }
+
+  public static PcConnectClient clientFactory(String ipAddress, String port) {
+    return new PcConnectClient(ipAddress, port);
+  }
+
   private List<Item> getItems(String url) throws Exception {
     Response response = null;
     try {
@@ -113,14 +125,6 @@ public class PcConnectClient {
     }
   }
 
-  public WebSocketConnection initializeSocket() {
-    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
-    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
-            .addHeader("token", this.verifiedUser.getToken()).build();
-    WebSocket webSocket = client.newWebSocket(wsRequest, socketConnection);
-    return socketConnection;
-  }
-
   private String createBaseUrl() {
     StringBuilder url = new StringBuilder();
     return url.append("http://")
@@ -131,10 +135,6 @@ public class PcConnectClient {
   private Request.Builder getDefaultRequestBuilder() {
     return new Request.Builder()
             .addHeader("Content-Type", "application/json");
-  }
-
-  public static PcConnectClient clientFactory(String ipAddress, String port) {
-    return new PcConnectClient(ipAddress, port);
   }
 
 }
