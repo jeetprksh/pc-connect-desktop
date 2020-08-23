@@ -36,19 +36,15 @@ public class SettingsController {
   }
 
   public void saveSettings() {
-    logger.info("Saving settings");
+    logger.info("Saving/Updating settings");
 
     if (Objects.isNull(downloadDirectory.getText()) || downloadDirectory.getText().isEmpty()) return;
 
     Optional<SettingDTO> settingsOpt = settingsDao.findAll().stream().findFirst();
     if (settingsOpt.isPresent()) {
-      SettingDTO setting = settingsOpt.get();
-      setting.setDownloadDirectory(downloadDirectory.getText());
-      settingsDao.update(setting);
+      updateSettings(settingsOpt);
     } else {
-      SettingDTO setting = new SettingDTO();
-      setting.setDownloadDirectory(downloadDirectory.getText());
-      settingsDao.save(setting);
+      saveNewSettings();
     }
   }
 
@@ -56,6 +52,18 @@ public class SettingsController {
   private void initialize() {
     settingsDao = new SettingsDao();
     populateSavedSettings();
+  }
+
+  private void updateSettings(Optional<SettingDTO> settingsOpt) {
+    SettingDTO setting = settingsOpt.get();
+    setting.setDownloadDirectory(downloadDirectory.getText());
+    settingsDao.update(setting);
+  }
+
+  private void saveNewSettings() {
+    SettingDTO setting = new SettingDTO();
+    setting.setDownloadDirectory(downloadDirectory.getText());
+    settingsDao.save(setting);
   }
 
   private void populateSavedSettings() {

@@ -42,17 +42,18 @@ public class RootController {
 
   public void connectServer() {
     try {
+      logger.info("Connecting to the server at " + this.ipAddress.getText() + ":" + this.port.getText());
       getClient().verifyUser(this.name.getText(), this.code.getText());
       this.webSocket = getClient().initializeSocket();
       initialiseItems();
       renderRootDirectories();
     } catch (Exception ex) {
-      ex.printStackTrace();
       showError(ex.getLocalizedMessage());
     }
   }
 
   public void renderRootDirectories() throws Exception {
+    logger.info("Rendering shared root directories");
     List<Item> items = getClient().getRootItems();
     this.items.getItems().addAll(items);
   }
@@ -62,6 +63,7 @@ public class RootController {
   }
 
   public void downloadItem() throws Exception {
+    logger.info("Downloading the item from server");
     FileOutputStream outputStream = null;
     InputStream stream = null;
     try {
@@ -69,6 +71,9 @@ public class RootController {
       stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
       outputStream = new FileOutputStream(new File("C:\\my-projects\\test.jpg")); // TODO pick from settings
       outputStream.write(IOUtils.toByteArray(stream));
+    } catch (Exception ex) {
+      logger.severe("Failed to download the item " + ex.getLocalizedMessage());
+      ex.printStackTrace();
     } finally {
       if (!Objects.isNull(outputStream)) {
         outputStream.flush();
@@ -82,13 +87,15 @@ public class RootController {
 
   public void openSettings() {
     try {
+      logger.info("Opening settings screen");
       Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
       Stage stage = new Stage();
       stage.setTitle("Settings");
       stage.setScene(new Scene(root));
       stage.show();
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      logger.severe("Failed to open settings screen " + ex.getLocalizedMessage());
+      ex.printStackTrace();
     }
   }
 

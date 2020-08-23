@@ -16,12 +16,13 @@ import java.util.logging.Logger;
  */
 public class PersistenceConfig {
 
-  private static final SessionFactory sessionFactory;
-
   private final static Logger logger = Logger.getLogger(PersistenceConfig.class.getName());
+
+  private static final SessionFactory sessionFactory;
 
   static {
     try {
+      logger.info("Initializing Hibernate Session Factory");
       StandardServiceRegistry standardRegistry =
               new StandardServiceRegistryBuilder().applySettings(getConfig()).build();
       Metadata metaData = new MetadataSources(standardRegistry)

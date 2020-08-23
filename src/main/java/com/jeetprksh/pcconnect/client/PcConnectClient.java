@@ -55,6 +55,9 @@ public class PcConnectClient {
         logger.severe("Verification failed for " + name);
         throw new Exception(verifyResponse.getMessage());
       }
+    } catch (Exception ex){
+      logger.severe("Failed to verify the user"  + name);
+      ex.printStackTrace();
     } finally {
       if (!Objects.isNull(response))
         response.close();

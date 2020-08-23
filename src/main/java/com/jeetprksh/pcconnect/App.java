@@ -23,6 +23,7 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
+    logger.info("Starting the PC Connect application");
     Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect.fxml"));
     primaryStage.setScene(new Scene(root));
     primaryStage.setTitle("PC Connect");
@@ -32,7 +33,7 @@ public class App extends Application {
 
   @Override
   public void stop() {
-    logger.info("Stopping the application");
+    logger.info("Stopping the PC Connect application");
     PersistenceConfig.getSessionFactory().close();
   }
 }
