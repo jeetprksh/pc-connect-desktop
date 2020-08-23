@@ -1,5 +1,8 @@
 package com.jeetprksh.pcconnect.client;
 
+/**
+ * @author Jeet Prakash
+ */
 enum ApiUrl {
 
   VERIFY_USER("/user/code/verify?name=%s&encoded=%s"),

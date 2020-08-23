@@ -10,8 +10,6 @@ import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 /*
  * @author Jeet Prakash
  * */

@@ -13,6 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
+/**
+ * @author Jeet Prakash
+ */
 public class SettingsController {
 
   private final Logger logger = Logger.getLogger(SettingsController.class.getName());

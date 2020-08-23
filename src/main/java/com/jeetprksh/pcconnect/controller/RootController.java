@@ -1,6 +1,7 @@
 package com.jeetprksh.pcconnect.controller;
 
 import com.jeetprksh.pcconnect.client.PcConnectClient;
+import com.jeetprksh.pcconnect.client.WebSocketConnection;
 import com.jeetprksh.pcconnect.client.pojo.Item;
 
 import org.apache.commons.io.IOUtils;
@@ -37,10 +38,12 @@ public class RootController {
   @FXML private ListView<Item> users = new ListView<>();
 
   private PcConnectClient client;
+  private WebSocketConnection webSocket;
 
   public void connectServer() {
     try {
       getClient().verifyUser(this.name.getText(), this.code.getText());
+      this.webSocket = getClient().initializeSocket();
       initialiseItems();
       renderRootDirectories();
     } catch (Exception ex) {

@@ -15,6 +15,9 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+/**
+ * @author Jeet Prakash
+ */
 public class WebSocketConnection extends WebSocketListener {
 
   private final Logger logger = Logger.getLogger(WebSocketConnection.class.getName());

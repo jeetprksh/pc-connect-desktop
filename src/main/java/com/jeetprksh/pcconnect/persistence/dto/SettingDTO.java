@@ -8,6 +8,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+/**
+ * @author Jeet Prakash
+ */
 @Entity
 @Table(name="setting")
 @NamedQueries({

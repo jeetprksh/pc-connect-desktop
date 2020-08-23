@@ -16,7 +16,11 @@ import java.util.logging.Logger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.WebSocket;
 
+/**
+ * @author Jeet Prakash
+ */
 public class PcConnectClient {
 
   private final Logger logger = Logger.getLogger(PcConnectClient.class.getName());
@@ -47,7 +51,6 @@ public class PcConnectClient {
         logger.fine(name + " got verified");
         User user = verifyResponse.getUser();
         this.verifiedUser = new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
-        initializeSocket();
       } else {
         logger.severe("Verification failed for " + name);
         throw new Exception(verifyResponse.getMessage());
@@ -110,11 +113,12 @@ public class PcConnectClient {
     }
   }
 
-  private void initializeSocket() {
+  public WebSocketConnection initializeSocket() {
     WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
     Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
             .addHeader("token", this.verifiedUser.getToken()).build();
-    client.newWebSocket(wsRequest, socketConnection);
+    WebSocket webSocket = client.newWebSocket(wsRequest, socketConnection);
+    return socketConnection;
   }
 
   private String createBaseUrl() {
