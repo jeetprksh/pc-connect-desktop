@@ -1,6 +1,7 @@
 package com.jeetprksh.pcconnect.controller;
 
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
+import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
 import com.jeetprksh.pcconnect.persistence.dto.SettingDTO;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public class SettingsController {
 
   private final Logger logger = Logger.getLogger(SettingsController.class.getName());
 
-  private SettingsDao settingsDao;
+  private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
 
   @FXML private TextField downloadDirectory;
   @FXML private Button browse;
@@ -50,7 +51,6 @@ public class SettingsController {
 
   @FXML
   private void initialize() {
-    settingsDao = new SettingsDao();
     populateSavedSettings();
   }
 

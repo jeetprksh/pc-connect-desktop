@@ -3,12 +3,16 @@ package com.jeetprksh.pcconnect.controller;
 import com.jeetprksh.pcconnect.client.PcConnectClient;
 import com.jeetprksh.pcconnect.client.WebSocketConnection;
 import com.jeetprksh.pcconnect.client.pojo.Item;
+import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
+import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -40,6 +44,8 @@ public class RootController {
   private PcConnectClient client;
   private WebSocketConnection webSocket;
 
+  private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
+
   public void connectServer() {
     try {
       logger.info("Connecting to the server at " + this.ipAddress.getText() + ":" + this.port.getText());
@@ -69,8 +75,10 @@ public class RootController {
     try {
       Item item = items.getSelectionModel().getSelectedItem();
       stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
-      outputStream = new FileOutputStream(new File("C:\\my-projects\\test.jpg")); // TODO pick from settings
+      String filePath = settingsDao.findAll().get(0).getDownloadDirectory() + File.separator + item.getName();
+      outputStream = new FileOutputStream(filePath);
       outputStream.write(IOUtils.toByteArray(stream));
+      logger.info("Downloaded the file at path " + filePath);
     } catch (Exception ex) {
       logger.severe("Failed to download the item " + ex.getLocalizedMessage());
       ex.printStackTrace();
