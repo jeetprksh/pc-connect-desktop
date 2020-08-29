@@ -1,5 +1,8 @@
 package com.jeetprksh.pcconnect.client.pojo;
 
+/*
+ * @author Jeet Prakash
+ * */
 public class Message {
 
   private String type;

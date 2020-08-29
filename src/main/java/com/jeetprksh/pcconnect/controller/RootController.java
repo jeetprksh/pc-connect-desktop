@@ -42,7 +42,6 @@ public class RootController {
   @FXML private ListView<Item> users = new ListView<>();
 
   private PcConnectClient client;
-  private WebSocketConnection webSocket;
 
   private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
 
@@ -50,7 +49,8 @@ public class RootController {
     try {
       logger.info("Connecting to the server at " + this.ipAddress.getText() + ":" + this.port.getText());
       getClient().verifyUser(this.name.getText(), this.code.getText());
-      this.webSocket = getClient().initializeSocket();
+      WebSocketConnection webSocket = getClient().initializeSocket();
+      webSocket.setObserver(this);
       initialiseItems();
       renderRootDirectories();
     } catch (Exception ex) {
