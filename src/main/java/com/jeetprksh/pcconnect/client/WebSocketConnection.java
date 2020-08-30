@@ -2,6 +2,7 @@ package com.jeetprksh.pcconnect.client;
 
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 import com.jeetprksh.pcconnect.controller.RootController;
+import com.jeetprksh.pcconnect.controller.UIObserver;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public class WebSocketConnection extends WebSocketListener {
 
   private final Logger logger = Logger.getLogger(WebSocketConnection.class.getName());
 
-  private RootController observer;
+  private UIObserver observer;
 
   private final VerifiedUser verifiedUser;
 
@@ -58,7 +59,7 @@ public class WebSocketConnection extends WebSocketListener {
     logger.info("ON BYTE MESSAGE");
   }
 
-  public void setObserver(RootController observer) {
+  public void setObserver(UIObserver observer) {
     this.observer = observer;
   }
 

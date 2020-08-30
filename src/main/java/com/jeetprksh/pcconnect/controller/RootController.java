@@ -3,6 +3,9 @@ package com.jeetprksh.pcconnect.controller;
 import com.jeetprksh.pcconnect.client.PcConnectClient;
 import com.jeetprksh.pcconnect.client.WebSocketConnection;
 import com.jeetprksh.pcconnect.client.pojo.Item;
+import com.jeetprksh.pcconnect.client.pojo.Message;
+import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
+import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
 
@@ -11,8 +14,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -29,7 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 
-public class RootController {
+public class RootController implements UIObserver {
 
   private final Logger logger = Logger.getLogger(RootController.class.getName());
 
@@ -39,20 +40,22 @@ public class RootController {
   @FXML private PasswordField code;
   @FXML private Button connect;
   @FXML private ListView<Item> items = new ListView<>();
-  @FXML private ListView<Item> users = new ListView<>();
+  @FXML private ListView<OnlineUser> users = new ListView<>();
 
   private PcConnectClient client;
+  private VerifiedUser verifiedUser;
 
   private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
 
   public void connectServer() {
     try {
       logger.info("Connecting to the server at " + this.ipAddress.getText() + ":" + this.port.getText());
-      getClient().verifyUser(this.name.getText(), this.code.getText());
+      this.verifiedUser = getClient().verifyUser(this.name.getText(), this.code.getText());
       WebSocketConnection webSocket = getClient().initializeSocket();
       webSocket.setObserver(this);
       initialiseItems();
       renderRootDirectories();
+      renderUsers();
     } catch (Exception ex) {
       showError(ex.getLocalizedMessage());
     }
@@ -61,7 +64,20 @@ public class RootController {
   public void renderRootDirectories() throws Exception {
     logger.info("Rendering shared root directories");
     List<Item> items = getClient().getRootItems();
+    this.items.getItems().clear();
     this.items.getItems().addAll(items);
+  }
+
+  public void renderUsers() throws Exception {
+    logger.info("Rendering online users");
+    List<OnlineUser> onlineUsers = getClient().getOnlineUsers();
+    onlineUsers.forEach(ou -> {
+      if (ou.getUserId().equalsIgnoreCase(this.verifiedUser.getId())) {
+        ou.setUserName(ou.getUserName() + " (You)");
+      }
+    });
+    this.users.getItems().clear();
+    this.users.getItems().addAll(onlineUsers);
   }
 
   public void renderParentDirectory() {
@@ -109,6 +125,11 @@ public class RootController {
 
   public void sendItemToUser() {
 
+  }
+
+  @Override
+  public void notify(Message message) {
+    // TODO Perform message specific action
   }
 
   private List<Item> getItems(String rootId, String path) throws Exception {

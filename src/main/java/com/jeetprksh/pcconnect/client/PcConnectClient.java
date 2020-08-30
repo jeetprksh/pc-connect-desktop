@@ -3,6 +3,8 @@ package com.jeetprksh.pcconnect.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeetprksh.pcconnect.client.pojo.Item;
 import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
+import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
+import com.jeetprksh.pcconnect.client.pojo.OnlineUserResponse;
 import com.jeetprksh.pcconnect.client.pojo.User;
 import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
@@ -38,7 +40,7 @@ public class PcConnectClient {
     this.port = port;
   }
 
-  public void verifyUser(String name, String code) throws Exception {
+  public VerifiedUser verifyUser(String name, String code) throws Exception {
     logger.info("Verifying User " + name);
     Response response = null;
     try {
@@ -62,6 +64,7 @@ public class PcConnectClient {
       if (!Objects.isNull(response))
         response.close();
     }
+    return verifiedUser;
   }
 
   public List<Item> getRootItems() throws Exception {
@@ -72,6 +75,28 @@ public class PcConnectClient {
   public List<Item> getItems(String rootId, String path) throws Exception {
     logger.info("Fetching the list of Items for " + rootId + " " + path);
     return getItems(createBaseUrl() + String.format(ApiUrl.GET_ITEMS_PATH.getUrl(), rootId, path));
+  }
+
+  public List<OnlineUser> getOnlineUsers() throws Exception {
+    logger.info("Fetching the list of online users");
+    Response response = null;
+    try {
+      Request request = getDefaultRequestBuilder()
+              .url(createBaseUrl() + ApiUrl.ONLINE_USERS.getUrl())
+              .get()
+              .addHeader("token", this.verifiedUser.getToken())
+              .build();
+      response = client.newCall(request).execute();
+      OnlineUserResponse onlineUserResponse = mapper.readValue(response.body().byteStream(), OnlineUserResponse.class);
+      if (response.isSuccessful()) {
+        return onlineUserResponse.getOnlineUsers();
+      } else {
+        throw new Exception(onlineUserResponse.getMessage());
+      }
+    } finally {
+      if (!Objects.isNull(response))
+        response.close();
+    }
   }
 
   public InputStream downloadItem(String rootAlias, String path) throws Exception {

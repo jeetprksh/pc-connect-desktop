@@ -6,6 +6,7 @@ package com.jeetprksh.pcconnect.client;
 enum ApiUrl {
 
   VERIFY_USER("/user/code/verify?name=%s&encoded=%s"),
+  ONLINE_USERS("/user/online"),
   GET_ITEMS("/items"),
   GET_ITEMS_PATH("/items?root=%s&path=%s"),
   DOWNLOAD_ITEM("/item/download?root=%s&path=%s&download");
