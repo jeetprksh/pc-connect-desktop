@@ -132,6 +132,11 @@ public class RootController implements UIObserver {
     // TODO Perform message specific action
   }
 
+  public void close() {
+    logger.info("Closing Root controller");
+    getClient().closeSocket();
+  }
+
   private List<Item> getItems(String rootId, String path) throws Exception {
     return getClient().getItems(rootId, path);
   }

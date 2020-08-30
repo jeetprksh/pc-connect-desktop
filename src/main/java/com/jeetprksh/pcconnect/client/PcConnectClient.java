@@ -34,6 +34,7 @@ public class PcConnectClient {
   private final String port;
 
   private VerifiedUser verifiedUser;
+  private WebSocket webSocket;
 
   private PcConnectClient(String ipAddress, String port) {
     this.ipAddress = ipAddress;
@@ -124,8 +125,14 @@ public class PcConnectClient {
     WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
     Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
             .addHeader("token", this.verifiedUser.getToken()).build();
-    WebSocket webSocket = client.newWebSocket(wsRequest, socketConnection);
+    webSocket = client.newWebSocket(wsRequest, socketConnection);
     return socketConnection;
+  }
+
+  public void closeSocket() {
+    if (!Objects.isNull(webSocket)) {
+      webSocket.close(1001, "Client logging out");
+    }
   }
 
   public static PcConnectClient clientFactory(String ipAddress, String port) {
