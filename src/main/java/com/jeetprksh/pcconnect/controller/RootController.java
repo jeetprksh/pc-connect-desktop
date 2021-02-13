@@ -8,16 +8,6 @@ import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,7 +18,16 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 public class RootController implements UIObserver {
 
@@ -90,6 +89,9 @@ public class RootController implements UIObserver {
     InputStream stream = null;
     try {
       Item item = items.getSelectionModel().getSelectedItem();
+      if (Objects.isNull(item) || item.isDirectory()) {
+        throw new Exception("Either no item was selected or the selected item was not a file.");
+      }
       stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
       String filePath = settingsDao.findAll().get(0).getDownloadDirectory() + File.separator + item.getName();
       outputStream = new FileOutputStream(filePath);
@@ -98,6 +100,7 @@ public class RootController implements UIObserver {
     } catch (Exception ex) {
       logger.severe("Failed to download the item " + ex.getLocalizedMessage());
       ex.printStackTrace();
+      showError(ex.getLocalizedMessage());
     } finally {
       if (!Objects.isNull(outputStream)) {
         outputStream.flush();
@@ -106,6 +109,29 @@ public class RootController implements UIObserver {
       if (!Objects.isNull(stream)) {
         stream.close();
       }
+    }
+  }
+
+  public void uploadItem() throws Exception {
+    logger.info("Uploading the item to server");
+    Item item = items.getSelectionModel().getSelectedItem();
+    if (Objects.isNull(item) || !item.isDirectory()) {
+      throw new Exception("Either no item was selected or the selected item was not a directory.");
+    }
+
+
+    FileChooser directoryChooser = new FileChooser();
+    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    File selectedDirectory = directoryChooser.showOpenDialog(null);
+
+    try {
+      if (!Objects.isNull(selectedDirectory)) {
+        getClient().uploadItem(selectedDirectory, item.getRootAlias(), item.getPath());
+      }
+    } catch (Exception ex) {
+      logger.severe("Failed to upload the item " + ex.getLocalizedMessage());
+      ex.printStackTrace();
+      showError(ex.getLocalizedMessage());
     }
   }
 
@@ -174,5 +200,4 @@ public class RootController implements UIObserver {
     alert.setContentText(message);
     alert.showAndWait();
   }
-
 }

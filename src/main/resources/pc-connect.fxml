@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="490.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="490.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -25,6 +25,7 @@
          <children>
             <ListView fx:id="items" layoutX="112.0" prefHeight="200.0" prefWidth="475.0" />
             <Button fx:id="download" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#downloadItem" text="Download" />
+            <Button fx:id="upload" layoutX="20.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#uploadItem" text="Upload" />
             <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
             <Button fx:id="settings" layoutX="20.0" layoutY="165.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
          </children>

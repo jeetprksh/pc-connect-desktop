@@ -9,14 +9,18 @@ import com.jeetprksh.pcconnect.client.pojo.User;
 import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 
@@ -102,7 +106,7 @@ public class PcConnectClient {
 
   public InputStream downloadItem(String rootAlias, String path) throws Exception {
     logger.info("Downloading the Item " + rootAlias + " " + path);
-    Response response;
+    Response response = null;
     try {
       Request request = getDefaultRequestBuilder()
               .url(createBaseUrl() + String.format(ApiUrl.DOWNLOAD_ITEM.getUrl(), rootAlias, path))
@@ -118,6 +122,37 @@ public class PcConnectClient {
     } catch (Exception e) {
       e.printStackTrace();
       throw e;
+    } finally {
+      if (!Objects.isNull(response)) {
+        response.close();
+      }
+    }
+  }
+
+  public void uploadItem(File file, String rootAlias, String path) throws Exception {
+    logger.info("Uploading the item to " + rootAlias + " " + path);
+    Response response = null;
+    try {
+      RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+              .addFormDataPart("file",file.getName(),
+                      RequestBody.create(MediaType.parse("application/octet-stream"), file))
+              .build();
+      Request request = getDefaultRequestBuilder()
+              .url(createBaseUrl() + String.format(ApiUrl.UPLOAD_ITEM.getUrl(), rootAlias, path))
+              .post(body)
+              .addHeader("token", this.verifiedUser.getToken())
+              .build();
+      response = client.newCall(request).execute();
+      if (!response.isSuccessful()) {
+        throw new Exception(response.message());
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw ex;
+    } finally {
+      if (!Objects.isNull(response)) {
+        response.close();
+      }
     }
   }
 
