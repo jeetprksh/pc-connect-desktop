@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 public class RootController implements UIObserver {
@@ -38,12 +39,15 @@ public class RootController implements UIObserver {
   @FXML private TextField name;
   @FXML private PasswordField code;
   @FXML private Button connect;
-  @FXML private ListView<Item> items = new ListView<>();
-  @FXML private ListView<OnlineUser> users = new ListView<>();
+
+  @FXML private final ListView<Item> items = new ListView<>();
+  @FXML private final ListView<OnlineUser> users = new ListView<>();
 
   private PcConnectClient client;
   private VerifiedUser verifiedUser;
 
+  private final Stack<Item> itemStack = new Stack<>();
+  private final String ROOT_DIRECTORIES = "ROOT_DIRECTORIES";
   private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
 
   public void connectServer() {
@@ -56,6 +60,7 @@ public class RootController implements UIObserver {
       renderRootDirectories();
       renderUsers();
     } catch (Exception ex) {
+      ex.printStackTrace();
       showError(ex.getLocalizedMessage());
     }
   }
@@ -65,6 +70,7 @@ public class RootController implements UIObserver {
     List<Item> items = getClient().getRootItems();
     this.items.getItems().clear();
     this.items.getItems().addAll(items);
+    itemStack.push(new Item(ROOT_DIRECTORIES, false, false, null, null));
   }
 
   public void renderUsers() throws Exception {
@@ -79,8 +85,20 @@ public class RootController implements UIObserver {
     this.users.getItems().addAll(onlineUsers);
   }
 
-  public void renderParentDirectory() {
-    // TODO
+  public void renderParentDirectory() throws Exception {
+    Item currentItem = itemStack.peek();
+    if (currentItem.getName().equalsIgnoreCase(ROOT_DIRECTORIES)) {
+      renderRootDirectories();
+      return;
+    }
+
+    itemStack.pop();
+    Item previousItem = itemStack.peek();
+    if (previousItem.getName().equalsIgnoreCase(ROOT_DIRECTORIES)) {
+      renderRootDirectories();
+    } else {
+      refreshList(previousItem.getRootAlias(), previousItem.getPath());
+    }
   }
 
   public void downloadItem() throws Exception {
@@ -179,6 +197,7 @@ public class RootController implements UIObserver {
       if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
         Item selectedItem = items.getSelectionModel().getSelectedItem();
         refreshList(selectedItem.getRootAlias(), selectedItem.getPath());
+        itemStack.push(selectedItem);
       }
     });
   }

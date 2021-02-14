@@ -57,7 +57,7 @@ public class PcConnectClient {
       if (response.isSuccessful()) {
         logger.fine(name + " got verified");
         User user = verifyResponse.getUser();
-        this.verifiedUser = new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
+        return new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
       } else {
         logger.severe("Verification failed for " + name);
         throw new Exception(verifyResponse.getMessage());
@@ -65,11 +65,11 @@ public class PcConnectClient {
     } catch (Exception ex){
       logger.severe("Failed to verify the user"  + name);
       ex.printStackTrace();
+      throw ex;
     } finally {
       if (!Objects.isNull(response))
         response.close();
     }
-    return verifiedUser;
   }
 
   public List<Item> getRootItems() throws Exception {
