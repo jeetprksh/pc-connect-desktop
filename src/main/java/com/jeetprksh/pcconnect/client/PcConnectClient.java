@@ -57,7 +57,8 @@ public class PcConnectClient {
       if (response.isSuccessful()) {
         logger.fine(name + " got verified");
         User user = verifyResponse.getUser();
-        return new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
+        this.verifiedUser = new VerifiedUser(user.getUserId(), ipAddress, port, name, user.getToken());
+        return this.verifiedUser;
       } else {
         logger.severe("Verification failed for " + name);
         throw new Exception(verifyResponse.getMessage());
