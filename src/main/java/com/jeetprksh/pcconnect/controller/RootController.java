@@ -40,8 +40,8 @@ public class RootController implements UIObserver {
   @FXML private PasswordField code;
   @FXML private Button connect;
 
-  @FXML private final ListView<Item> items = new ListView<>();
-  @FXML private final ListView<OnlineUser> users = new ListView<>();
+  @FXML private ListView<Item> items;
+  @FXML private ListView<OnlineUser> users;
 
   private PcConnectClient client;
   private VerifiedUser verifiedUser;
@@ -74,13 +74,13 @@ public class RootController implements UIObserver {
   }
 
   public void renderUsers() throws Exception {
-    logger.info("Rendering online users");
     List<OnlineUser> onlineUsers = getClient().getOnlineUsers();
     onlineUsers.forEach(ou -> {
       if (ou.getUserId().equalsIgnoreCase(this.verifiedUser.getId())) {
         ou.setUserName(ou.getUserName() + " (You)");
       }
     });
+    logger.info("Rendering online users " + onlineUsers);
     this.users.getItems().clear();
     this.users.getItems().addAll(onlineUsers);
   }

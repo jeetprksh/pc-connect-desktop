@@ -1,18 +1,15 @@
 package com.jeetprksh.pcconnect.client;
 
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
-import com.jeetprksh.pcconnect.controller.RootController;
 import com.jeetprksh.pcconnect.controller.UIObserver;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.logging.Logger;
-
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.logging.Logger;
 
 /**
  * @author Jeet Prakash
