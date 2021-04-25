@@ -137,7 +137,6 @@ public class RootController implements UIObserver {
       throw new Exception("Either no item was selected or the selected item was not a directory.");
     }
 
-
     FileChooser directoryChooser = new FileChooser();
     directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     File selectedDirectory = directoryChooser.showOpenDialog(null);
