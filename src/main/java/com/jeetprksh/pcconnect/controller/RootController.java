@@ -60,6 +60,7 @@ public class RootController implements UIObserver {
       renderRootDirectories();
       renderUsers();
     } catch (Exception ex) {
+      this.client = null;
       ex.printStackTrace();
       showError(ex.getLocalizedMessage());
     }
