@@ -3,7 +3,7 @@ package com.jeetprksh.pcconnect.client;
 /**
  * @author Jeet Prakash
  */
-enum ApiUrl {
+public enum ApiUrl {
 
   VERIFY_USER("/user/code/verify?name=%s&encoded=%s"),
   ONLINE_USERS("/user/online"),
@@ -18,7 +18,7 @@ enum ApiUrl {
     this.url = url;
   }
 
-  String getUrl() {
+  public String getUrl() {
     return this.url;
   }
 }
