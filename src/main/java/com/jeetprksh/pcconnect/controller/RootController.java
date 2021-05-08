@@ -20,13 +20,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
@@ -106,30 +106,19 @@ public class RootController implements UIObserver {
 
   public void downloadItem() throws Exception {
     logger.info("Downloading the item from server");
-    FileOutputStream outputStream = null;
-    InputStream stream = null;
-    try {
-      Item item = items.getSelectionModel().getSelectedItem();
-      if (Objects.isNull(item) || item.isDirectory()) {
-        throw new Exception("Either no item was selected or the selected item was not a file.");
-      }
-      stream = getClient().downloadItem(item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()));
+    Item item = items.getSelectionModel().getSelectedItem();
+    if (Objects.isNull(item) || item.isDirectory()) {
+      throw new Exception("Either no item was selected or the selected item was not a file.");
+    }
+    try(InputStream stream = getClient()
+            .downloadItem(item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()))) {
       String filePath = settingsDao.findAll().get(0).getDownloadDirectory() + File.separator + item.getName();
-      outputStream = new FileOutputStream(filePath);
-      outputStream.write(IOUtils.toByteArray(stream));
+      Files.copy(stream, (new File(filePath)).toPath(), StandardCopyOption.REPLACE_EXISTING);
       logger.info("Downloaded the file at path " + filePath);
     } catch (Exception ex) {
       logger.severe("Failed to download the item " + ex.getLocalizedMessage());
       ex.printStackTrace();
       showError(ex.getLocalizedMessage());
-    } finally {
-      if (!Objects.isNull(outputStream)) {
-        outputStream.flush();
-        outputStream.close();
-      }
-      if (!Objects.isNull(stream)) {
-        stream.close();
-      }
     }
   }
 
