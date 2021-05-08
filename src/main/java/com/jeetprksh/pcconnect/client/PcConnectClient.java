@@ -62,20 +62,20 @@ public class PcConnectClient {
 
   public List<OnlineUser> getOnlineUsers() throws Exception {
     logger.info("Fetching the list of online users");
-    OnlineUsersRequest request = new OnlineUsersRequest(createBaseUrl());
+    OnlineUsersRequest request = new OnlineUsersRequest(createBaseUrl(), verifiedUser.getToken());
     OnlineUserResponse onlineUserResponse = request.execute();
     return onlineUserResponse.getOnlineUsers();
   }
 
   public InputStream downloadItem(String rootAlias, String path) throws Exception {
     logger.info("Downloading the Item " + rootAlias + " " + path);
-    DownloadItemRequest request = new DownloadItemRequest(createBaseUrl(), rootAlias, path);
+    DownloadItemRequest request = new DownloadItemRequest(createBaseUrl(), verifiedUser.getToken(), rootAlias, path);
     return request.execute();
   }
 
   public void uploadItem(File file, String rootAlias, String path) throws Exception {
     logger.info("Uploading the item to " + rootAlias + " " + path);
-    UploadItemRequest request = new UploadItemRequest(createBaseUrl(), file, rootAlias, path);
+    UploadItemRequest request = new UploadItemRequest(createBaseUrl(), verifiedUser.getToken(), file, rootAlias, path);
     request.execute();
   }
 
@@ -98,7 +98,7 @@ public class PcConnectClient {
   }
 
   private List<Item> getItems(String url) throws Exception {
-    GetItemRequest request = new GetItemRequest(url);
+    GetItemRequest request = new GetItemRequest(url, verifiedUser.getToken());
     ItemResponse itemResponse = request.execute();
     return itemResponse.getItems();
   }

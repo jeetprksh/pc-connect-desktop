@@ -31,7 +31,11 @@ public class VerifyUserRequest extends PCConnectRequest {
     String url = baseUrl + String.format(ApiUrl.VERIFY_USER.getUrl(), name, encodedCode);
     HttpGet get = new HttpGet(url);
     CloseableHttpResponse response = (CloseableHttpResponse) client.execute(get);
-    return mapper.readValue(response.getEntity().getContent(), VerifyResponse.class);
+    if (response.getCode() == 200) {
+      return mapper.readValue(response.getEntity().getContent(), VerifyResponse.class);
+    } else {
+      throw new Exception("Error verifying " + name);
+    }
   }
 
 }

@@ -25,6 +25,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
@@ -111,7 +113,7 @@ public class RootController implements UIObserver {
       if (Objects.isNull(item) || item.isDirectory()) {
         throw new Exception("Either no item was selected or the selected item was not a file.");
       }
-      stream = getClient().downloadItem(item.getRootAlias(), item.getPath());
+      stream = getClient().downloadItem(item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()));
       String filePath = settingsDao.findAll().get(0).getDownloadDirectory() + File.separator + item.getName();
       outputStream = new FileOutputStream(filePath);
       outputStream.write(IOUtils.toByteArray(stream));
@@ -204,7 +206,7 @@ public class RootController implements UIObserver {
 
   private void refreshList(String rootAlias, String path) {
     try {
-      List<Item> items = getItems(rootAlias, path);
+      List<Item> items = getItems(rootAlias, URLEncoder.encode(path, StandardCharsets.UTF_8.name()));
       this.items.getItems().clear();
       this.items.getItems().addAll(items);
     } catch (Exception e) {

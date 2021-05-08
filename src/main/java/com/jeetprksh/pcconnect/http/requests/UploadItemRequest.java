@@ -2,11 +2,8 @@ package com.jeetprksh.pcconnect.http.requests;
 
 import com.jeetprksh.pcconnect.client.ApiUrl;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 
 import java.io.File;
-import java.io.InputStream;
 
 /**
  * @author Jeet Prakash
@@ -14,12 +11,14 @@ import java.io.InputStream;
 public class UploadItemRequest extends PCConnectRequest {
 
   private final String baseUrl;
+  private final String token;
   private final File file;
   private final String rootAlias;
   private final String path;
 
-  public UploadItemRequest(String baseUrl, File file, String rootAlias, String path) {
+  public UploadItemRequest(String baseUrl, String token, File file, String rootAlias, String path) {
     this.baseUrl = baseUrl;
+    this.token = token;
     this.file = file;
     this.rootAlias = rootAlias;
     this.path = path;

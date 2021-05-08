@@ -19,7 +19,6 @@ public class RequestInterceptor implements HttpRequestInterceptor {
           EntityDetails entity, HttpContext context) {
     logger.info("Request Interceptor");
     request.setHeader("Content-Type", "application/json");
-    request.setHeader("token", ""); // TODO
   }
 
 }
