@@ -8,6 +8,7 @@ import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
 import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
 import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
+import com.jeetprksh.pcconnect.persistence.dto.SettingDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -112,7 +114,7 @@ public class RootController implements UIObserver {
     }
     try(InputStream stream = getClient()
             .downloadItem(item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()))) {
-      String filePath = settingsDao.findAll().get(0).getDownloadDirectory() + File.separator + item.getName();
+      String filePath = getDownloadDirectory() + File.separator + item.getName();
       Files.copy(stream, (new File(filePath)).toPath(), StandardCopyOption.REPLACE_EXISTING);
       logger.info("Downloaded the file at path " + filePath);
     } catch (Exception ex) {
@@ -170,6 +172,22 @@ public class RootController implements UIObserver {
   public void close() {
     logger.info("Closing Root controller");
     getClient().closeSocket();
+  }
+
+  private String getDownloadDirectory() {
+    List<SettingDTO> allSettings = settingsDao.findAll();
+    if (allSettings.isEmpty()) {
+      return askForDirectory();
+    } else {
+      return Objects.isNull(allSettings.get(0).getDownloadDirectory())
+              ? askForDirectory() : allSettings.get(0).getDownloadDirectory();
+    }
+  }
+
+  private String askForDirectory() {
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    return directoryChooser.showDialog(null).getAbsolutePath();
   }
 
   private List<Item> getItems(String rootId, String path) throws Exception {
