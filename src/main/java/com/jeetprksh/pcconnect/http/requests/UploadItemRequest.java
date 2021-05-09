@@ -2,15 +2,10 @@ package com.jeetprksh.pcconnect.http.requests;
 
 import com.jeetprksh.pcconnect.client.ApiUrl;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
-import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.entity.mime.FileBody;
-import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.message.BasicHeader;
 
 import java.io.File;
@@ -38,19 +33,12 @@ public class UploadItemRequest extends PCConnectRequest {
 
   public void execute() throws Exception {
     String url = baseUrl + String.format(ApiUrl.UPLOAD_ITEM.getUrl(), rootAlias, URLEncoder.encode(path, StandardCharsets.UTF_8.toString()));
-    System.out.println("baseUrl :: " + baseUrl);
-    System.out.println("token :: " + token);
-    System.out.println("file :: " + file.getAbsolutePath());
-    System.out.println("rootAlias :: " + rootAlias);
-    System.out.println("path :: " + path);
-
     HttpPost httpPost = new HttpPost(url);
     HttpEntity entity = MultipartEntityBuilder.create()
             .addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName()).build();
     httpPost.setEntity(entity);
     httpPost.addHeader(new BasicHeader("token", token));
-    CloseableHttpResponse response = (CloseableHttpResponse)client.execute(httpPost);
-    System.out.println("RESPONSE :: " + IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8));
+    client.execute(httpPost);
   }
 
 }

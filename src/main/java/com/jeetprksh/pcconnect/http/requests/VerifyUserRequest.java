@@ -15,8 +15,6 @@ import java.util.logging.Logger;
  */
 public class VerifyUserRequest extends PCConnectRequest {
 
-  private final Logger logger =  Logger.getLogger(VerifyUserRequest.class.getName());
-
   private final String baseUrl;
   private final String name;
   private final String code;
