@@ -4,6 +4,7 @@ import com.jeetprksh.pcconnect.client.ApiUrl;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.message.BasicHeader;
@@ -38,7 +39,10 @@ public class UploadItemRequest extends PCConnectRequest {
             .addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, file.getName()).build();
     httpPost.setEntity(entity);
     httpPost.addHeader(new BasicHeader("token", token));
-    client.execute(httpPost);
+    CloseableHttpResponse response = (CloseableHttpResponse) client.execute(httpPost);
+    if (response.getCode() != 200) {
+      throw new Exception("Error uploading the file");
+    }
   }
 
 }

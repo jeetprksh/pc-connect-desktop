@@ -10,7 +10,7 @@ public enum ApiUrl {
   GET_ITEMS("/items"),
   GET_ITEMS_PATH("/items?root=%s&path=%s"),
   DOWNLOAD_ITEM("/item/download?root=%s&path=%s&download"),
-  UPLOAD_ITEM("/item/upload?root=%s&path=%s&download");
+  UPLOAD_ITEM("/item/upload?root=%s&path=%s");
 
   private final String url;
 
