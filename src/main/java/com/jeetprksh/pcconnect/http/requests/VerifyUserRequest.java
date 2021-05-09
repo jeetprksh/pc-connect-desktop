@@ -5,6 +5,7 @@ import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 import java.util.Base64;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ public class VerifyUserRequest extends PCConnectRequest {
     String encodedCode = Base64.getMimeEncoder().encodeToString(code.getBytes());
     String url = baseUrl + String.format(ApiUrl.VERIFY_USER.getUrl(), name, encodedCode);
     HttpGet get = new HttpGet(url);
+    get.addHeader(new BasicHeader("Content-Type", "application/json"));
     CloseableHttpResponse response = (CloseableHttpResponse) client.execute(get);
     if (response.getCode() == 200) {
       return mapper.readValue(response.getEntity().getContent(), VerifyResponse.class);

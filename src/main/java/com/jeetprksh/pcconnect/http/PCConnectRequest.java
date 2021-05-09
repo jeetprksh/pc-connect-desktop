@@ -12,11 +12,9 @@ public abstract class PCConnectRequest {
 
   protected final ObjectMapper mapper = new ObjectMapper();
   protected final HttpClient client;
-  protected final HttpClientResponseHandler<String> responseHandler;
 
   public PCConnectRequest() {
-    this.client = HttpClients.custom().addRequestInterceptorFirst(new RequestInterceptor()).build();
-    this.responseHandler = new PCConnectResponseHandler();
+    this.client = HttpClients.custom().build();
   }
 
 }

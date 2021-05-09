@@ -22,6 +22,7 @@ public class GetItemRequest extends PCConnectRequest {
   public ItemResponse execute() throws Exception {
     HttpGet get = new HttpGet(url);
     get.addHeader(new BasicHeader("token", token));
+    get.addHeader(new BasicHeader("Content-Type", "application/json"));
     CloseableHttpResponse response = (CloseableHttpResponse) client.execute(get);
     return  mapper.readValue(response.getEntity().getContent(), ItemResponse.class);
   }

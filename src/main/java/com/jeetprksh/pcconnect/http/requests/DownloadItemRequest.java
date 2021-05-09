@@ -29,6 +29,7 @@ public class DownloadItemRequest extends PCConnectRequest {
     String url = baseUrl + String.format(ApiUrl.DOWNLOAD_ITEM.getUrl(), rootAlias, path);
     HttpGet get = new HttpGet(url);
     get.addHeader(new BasicHeader("token", token));
+    get.addHeader(new BasicHeader("Content-Type", "application/json"));
     CloseableHttpResponse response = (CloseableHttpResponse) client.execute(get);
     return response.getEntity().getContent();
   }

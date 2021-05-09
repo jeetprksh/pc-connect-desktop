@@ -24,6 +24,7 @@ public class OnlineUsersRequest extends PCConnectRequest {
     String url = baseUrl + ApiUrl.ONLINE_USERS.getUrl();
     HttpGet get = new HttpGet(url);
     get.addHeader(new BasicHeader("token", token));
+    get.addHeader(new BasicHeader("Content-Type", "application/json"));
     CloseableHttpResponse response = (CloseableHttpResponse) client.execute(get);
     return mapper.readValue(response.getEntity().getContent(), OnlineUserResponse.class);
   }
