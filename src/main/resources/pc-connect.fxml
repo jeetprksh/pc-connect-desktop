@@ -27,7 +27,7 @@
             <Button fx:id="download" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#downloadItem" text="Download" />
             <Button fx:id="upload" layoutX="20.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#uploadItem" text="Upload" />
             <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
-            <Button fx:id="settings" layoutX="20.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
+            <Button fx:id="settings" layoutX="20.0" layoutY="225.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
             <Button fx:id="refreshDirectory" layoutX="19.0" layoutY="110.0" mnemonicParsing="false" onMouseClicked="#refreshDirectory" text="Refresh" />
          </children>
       </Pane>
