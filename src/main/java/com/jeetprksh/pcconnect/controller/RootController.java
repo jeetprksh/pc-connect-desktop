@@ -19,6 +19,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -43,6 +44,8 @@ public class RootController implements UIObserver {
   @FXML private TextField name;
   @FXML private PasswordField code;
   @FXML private Button connect;
+  @FXML public Button sendToUser;
+  @FXML public Button refreshUsers;
 
   @FXML private ListView<Item> items;
   @FXML private ListView<OnlineUser> users;
@@ -76,18 +79,6 @@ public class RootController implements UIObserver {
     this.items.getItems().clear();
     this.items.getItems().addAll(items);
     itemStack.push(new Item(ROOT_DIRECTORIES, false, false, null, null));
-  }
-
-  public void renderUsers() throws Exception {
-    List<OnlineUser> onlineUsers = getClient().getOnlineUsers();
-    onlineUsers.forEach(ou -> {
-      if (ou.getUserId().equalsIgnoreCase(this.verifiedUser.getId())) {
-        ou.setUserName(ou.getUserName() + " (You)");
-      }
-    });
-    logger.info("Rendering online users " + onlineUsers);
-    this.users.getItems().clear();
-    this.users.getItems().addAll(onlineUsers);
   }
 
   public void renderParentDirectory() throws Exception {
@@ -146,44 +137,6 @@ public class RootController implements UIObserver {
     }
   }
 
-  public void openSettings() {
-    try {
-      logger.info("Opening settings screen");
-      Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
-      Stage stage = new Stage();
-      stage.setTitle("Settings");
-      stage.setScene(new Scene(root));
-      stage.show();
-    } catch (Exception ex) {
-      logger.severe("Failed to open settings screen " + ex.getLocalizedMessage());
-      ex.printStackTrace();
-    }
-  }
-
-  public void sendItemToUser() {
-
-  }
-
-  @Override
-  public void notify(Message message) {
-    // TODO Perform message specific action
-  }
-
-  public void close() {
-    logger.info("Closing Root controller");
-    getClient().closeSocket();
-  }
-
-  private String getDownloadDirectory() {
-    List<SettingDTO> allSettings = settingsDao.findAll();
-    if (allSettings.isEmpty()) {
-      return askForDirectory();
-    } else {
-      return Objects.isNull(allSettings.get(0).getDownloadDirectory())
-              ? askForDirectory() : allSettings.get(0).getDownloadDirectory();
-    }
-  }
-
   private String askForDirectory() {
     DirectoryChooser directoryChooser = new DirectoryChooser();
     directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -192,13 +145,6 @@ public class RootController implements UIObserver {
 
   private List<Item> getItems(String rootId, String path) throws Exception {
     return getClient().getItems(rootId, path);
-  }
-
-  private PcConnectClient getClient() {
-    if (Objects.isNull(this.client)) {
-      this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText());
-    }
-    return this.client;
   }
 
   private void initialiseItems() {
@@ -220,6 +166,78 @@ public class RootController implements UIObserver {
       e.printStackTrace();
       showError(e.getLocalizedMessage());
     }
+  }
+
+  private String getDownloadDirectory() {
+    List<SettingDTO> allSettings = settingsDao.findAll();
+    if (allSettings.isEmpty()) {
+      return askForDirectory();
+    } else {
+      return Objects.isNull(allSettings.get(0).getDownloadDirectory())
+              ? askForDirectory() : allSettings.get(0).getDownloadDirectory();
+    }
+  }
+
+  public void refreshDirectory() throws Exception {
+    logger.info("Refreshing directory");
+    Item currentItem = itemStack.peek();
+    if (currentItem.getName().equalsIgnoreCase(ROOT_DIRECTORIES)) {
+      renderRootDirectories();
+    } else {
+      refreshList(currentItem.getRootAlias(), currentItem.getPath());
+    }
+  }
+
+  public void openSettings() {
+    try {
+      logger.info("Opening settings screen");
+      Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
+      Stage stage = new Stage();
+      stage.setTitle("Settings");
+      stage.setScene(new Scene(root));
+      stage.show();
+    } catch (Exception ex) {
+      logger.severe("Failed to open settings screen " + ex.getLocalizedMessage());
+      ex.printStackTrace();
+    }
+  }
+
+  public void renderUsers() throws Exception {
+    List<OnlineUser> onlineUsers = getClient().getOnlineUsers();
+    onlineUsers.forEach(ou -> {
+      if (ou.getUserId().equalsIgnoreCase(this.verifiedUser.getId())) {
+        ou.setUserName(ou.getUserName() + " (You)");
+      }
+    });
+    logger.info("Rendering online users " + onlineUsers);
+    this.users.getItems().clear();
+    this.users.getItems().addAll(onlineUsers);
+  }
+
+  public void sendItemToUser() {
+
+  }
+
+  public void refreshUsers() throws Exception {
+    logger.info("Refreshing user list");
+    renderUsers();
+  }
+
+  @Override
+  public void notify(Message message) {
+    // TODO Perform message specific action
+  }
+
+  public void close() {
+    logger.info("Closing Root controller");
+    getClient().closeSocket();
+  }
+
+  private PcConnectClient getClient() {
+    if (Objects.isNull(this.client)) {
+      this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText());
+    }
+    return this.client;
   }
 
   private void showError(String message) {

@@ -3,14 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="490.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="600.0" prefWidth="600.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.controller.RootController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
+      <RowConstraints maxHeight="274.6" minHeight="205.0" prefHeight="264.8" />
+      <RowConstraints maxHeight="250.0" minHeight="166.2" prefHeight="250.0" />
    </rowConstraints>
    <children>
       <Pane maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="700.0">
@@ -23,18 +23,20 @@
          </children></Pane>
       <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <children>
-            <ListView fx:id="items" layoutX="112.0" prefHeight="200.0" prefWidth="475.0" />
+            <ListView fx:id="items" layoutX="112.0" prefHeight="260.0" prefWidth="475.0" />
             <Button fx:id="download" layoutX="20.0" layoutY="40.0" mnemonicParsing="false" onMouseClicked="#downloadItem" text="Download" />
             <Button fx:id="upload" layoutX="20.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#uploadItem" text="Upload" />
             <Button fx:id="back" layoutX="20.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#renderParentDirectory" prefHeight="25.0" prefWidth="70.0" text="Back" />
-            <Button fx:id="settings" layoutX="20.0" layoutY="165.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
+            <Button fx:id="settings" layoutX="20.0" layoutY="231.0" mnemonicParsing="false" onMouseClicked="#openSettings" prefHeight="25.0" prefWidth="85.0" text="Settings" />
+            <Button fx:id="refreshDirectory" layoutX="19.0" layoutY="110.0" mnemonicParsing="false" onMouseClicked="#refreshDirectory" text="Refresh" />
          </children>
       </Pane>
       <Pane prefHeight="240.0" prefWidth="200.0" GridPane.rowIndex="2">
          <children>
-            <ListView fx:id="users" layoutX="112.0" layoutY="27.0" prefHeight="200.0" prefWidth="475.0" />
-            <Button fx:id="send" layoutX="20.0" layoutY="27.0" mnemonicParsing="false" onMouseClicked="#sendItemToUser" text="Send" />
+            <ListView fx:id="users" layoutX="112.0" layoutY="27.0" prefHeight="220.0" prefWidth="475.0" />
+            <Button fx:id="sendToUser" layoutX="20.0" layoutY="27.0" mnemonicParsing="false" onMouseClicked="#sendItemToUser" text="Send" />
             <Label layoutX="20.0" layoutY="4.0" text="People on your Network:" />
+            <Button fx:id="refreshUsers" layoutX="20.0" layoutY="63.0" mnemonicParsing="false" onMouseClicked="#refreshUsers" text="Refresh" />
          </children>
       </Pane>
    </children>
