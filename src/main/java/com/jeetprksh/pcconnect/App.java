@@ -1,6 +1,6 @@
 package com.jeetprksh.pcconnect;
 
-import com.jeetprksh.pcconnect.controller.RootController;
+import com.jeetprksh.pcconnect.root.RootController;
 import com.jeetprksh.pcconnect.persistence.PersistenceConfig;
 
 import java.util.logging.Logger;

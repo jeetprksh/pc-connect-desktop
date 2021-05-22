@@ -1,7 +1,7 @@
-package com.jeetprksh.pcconnect.client;
+package com.jeetprksh.pcconnect.websocket;
 
-import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
-import com.jeetprksh.pcconnect.controller.UIObserver;
+import com.jeetprksh.pcconnect.http.pojo.VerifiedUser;
+import com.jeetprksh.pcconnect.root.UIObserver;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;

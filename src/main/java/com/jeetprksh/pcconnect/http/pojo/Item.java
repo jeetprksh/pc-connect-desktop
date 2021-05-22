@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect.client.pojo;
+package com.jeetprksh.pcconnect.http.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

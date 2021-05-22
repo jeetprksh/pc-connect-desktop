@@ -1,18 +1,14 @@
-package com.jeetprksh.pcconnect.controller;
-
-import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
-import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
-import com.jeetprksh.pcconnect.persistence.dto.SettingDTO;
-
-import java.io.File;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.logging.Logger;
+package com.jeetprksh.pcconnect.settings;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+
+import java.io.File;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * @author Jeet Prakash
@@ -56,19 +52,20 @@ public class SettingsController {
 
   private void updateSettings(Optional<SettingDTO> settingsOpt) {
     SettingDTO setting = settingsOpt.get();
-    setting.setDownloadDirectory(downloadDirectory.getText());
+    setting.setSettingValue(downloadDirectory.getText());
     settingsDao.update(setting);
   }
 
   private void saveNewSettings() {
     SettingDTO setting = new SettingDTO();
-    setting.setDownloadDirectory(downloadDirectory.getText());
+    setting.setSettingKey(SettingsKey.downloadDirectory.getSettingKey());
+    setting.setSettingValue(downloadDirectory.getText());
     settingsDao.save(setting);
   }
 
   private void populateSavedSettings() {
     Optional<SettingDTO> settingsOpt = settingsDao.findAll().stream().findFirst();
-    settingsOpt.ifPresent(settingDTO -> downloadDirectory.setText(settingDTO.getDownloadDirectory()));
+    settingsOpt.ifPresent(settingDTO -> downloadDirectory.setText(settingDTO.getSettingValue()));
   }
 
 }

@@ -1,14 +1,13 @@
 package com.jeetprksh.pcconnect.http.requests;
 
-import com.jeetprksh.pcconnect.client.ApiUrl;
-import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
+import com.jeetprksh.pcconnect.http.ApiUrl;
+import com.jeetprksh.pcconnect.http.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.message.BasicHeader;
 
 import java.util.Base64;
-import java.util.logging.Logger;
 
 /**
  * @author Jeet Prakash

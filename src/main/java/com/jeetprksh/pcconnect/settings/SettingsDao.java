@@ -1,6 +1,6 @@
-package com.jeetprksh.pcconnect.persistence.dao;
+package com.jeetprksh.pcconnect.settings;
 
-import com.jeetprksh.pcconnect.persistence.dto.SettingDTO;
+import com.jeetprksh.pcconnect.persistence.CommonDao;
 
 import org.hibernate.HibernateException;
 

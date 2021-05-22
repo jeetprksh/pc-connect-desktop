@@ -1,23 +1,24 @@
-package com.jeetprksh.pcconnect.client.pojo;
+package com.jeetprksh.pcconnect.http.pojo;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-  "status",
-  "message",
-  "data"
+        "status",
+        "message",
+        "data"
 })
-public class VerifyResponse {
+public class OnlineUserResponse {
 
   @JsonProperty("status")
   private boolean status;
   @JsonProperty("message")
   private String message;
   @JsonProperty("data")
-  private User user;
+  private List<OnlineUser> onlineUsers = null;
 
   @JsonProperty("status")
   public boolean isStatus() {
@@ -40,13 +41,13 @@ public class VerifyResponse {
   }
 
   @JsonProperty("data")
-  public User getUser() {
-    return user;
+  public List<OnlineUser> getOnlineUsers() {
+    return onlineUsers;
   }
 
   @JsonProperty("data")
-  public void setUser(User user) {
-    this.user = user;
+  public void setOnlineUsers(List<OnlineUser> onlineUsers) {
+    this.onlineUsers = onlineUsers;
   }
 
 }

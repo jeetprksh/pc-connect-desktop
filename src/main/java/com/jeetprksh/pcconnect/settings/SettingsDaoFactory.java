@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect.persistence.dao;
+package com.jeetprksh.pcconnect.settings;
 
 import java.util.Objects;
 

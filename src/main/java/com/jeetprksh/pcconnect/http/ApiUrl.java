@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect.client;
+package com.jeetprksh.pcconnect.http;
 
 /**
  * @author Jeet Prakash

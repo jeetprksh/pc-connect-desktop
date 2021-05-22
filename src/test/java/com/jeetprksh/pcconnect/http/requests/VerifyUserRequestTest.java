@@ -1,6 +1,6 @@
 package com.jeetprksh.pcconnect.http.requests;
 
-import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
+import com.jeetprksh.pcconnect.http.pojo.VerifyResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

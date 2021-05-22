@@ -1,14 +1,14 @@
-package com.jeetprksh.pcconnect.controller;
+package com.jeetprksh.pcconnect.root;
 
-import com.jeetprksh.pcconnect.client.PcConnectClient;
-import com.jeetprksh.pcconnect.client.WebSocketConnection;
-import com.jeetprksh.pcconnect.client.pojo.Item;
-import com.jeetprksh.pcconnect.client.pojo.Message;
-import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
-import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
-import com.jeetprksh.pcconnect.persistence.dao.SettingsDao;
-import com.jeetprksh.pcconnect.persistence.dao.SettingsDaoFactory;
-import com.jeetprksh.pcconnect.persistence.dto.SettingDTO;
+import com.jeetprksh.pcconnect.http.PcConnectClient;
+import com.jeetprksh.pcconnect.websocket.WebSocketConnection;
+import com.jeetprksh.pcconnect.http.pojo.Item;
+import com.jeetprksh.pcconnect.http.pojo.Message;
+import com.jeetprksh.pcconnect.http.pojo.OnlineUser;
+import com.jeetprksh.pcconnect.http.pojo.VerifiedUser;
+import com.jeetprksh.pcconnect.settings.SettingsDao;
+import com.jeetprksh.pcconnect.settings.SettingsDaoFactory;
+import com.jeetprksh.pcconnect.settings.SettingDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +19,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -173,8 +172,8 @@ public class RootController implements UIObserver {
     if (allSettings.isEmpty()) {
       return askForDirectory();
     } else {
-      return Objects.isNull(allSettings.get(0).getDownloadDirectory())
-              ? askForDirectory() : allSettings.get(0).getDownloadDirectory();
+      return Objects.isNull(allSettings.get(0).getSettingValue())
+              ? askForDirectory() : allSettings.get(0).getSettingValue();
     }
   }
 

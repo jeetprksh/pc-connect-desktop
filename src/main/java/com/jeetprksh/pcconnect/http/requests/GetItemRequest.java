@@ -1,6 +1,6 @@
 package com.jeetprksh.pcconnect.http.requests;
 
-import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
+import com.jeetprksh.pcconnect.http.pojo.ItemResponse;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;

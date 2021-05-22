@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect.persistence.dto;
+package com.jeetprksh.pcconnect.settings;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +22,9 @@ public class SettingDTO {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  private String downloadDirectory;
+  private String settingKey;
+
+  private String settingValue;
 
   public SettingDTO() { }
 
@@ -34,19 +36,28 @@ public class SettingDTO {
     this.id = id;
   }
 
-  public String getDownloadDirectory() {
-    return downloadDirectory;
+  public String getSettingKey() {
+    return settingKey;
   }
 
-  public void setDownloadDirectory(String downloadDirectory) {
-    this.downloadDirectory = downloadDirectory;
+  public void setSettingKey(String settingKey) {
+    this.settingKey = settingKey;
+  }
+
+  public String getSettingValue() {
+    return settingValue;
+  }
+
+  public void setSettingValue(String settingValue) {
+    this.settingValue = settingValue;
   }
 
   @Override
   public String toString() {
     return "SettingDTO{" +
             "id=" + id +
-            ", downloadDirectory='" + downloadDirectory + '\'' +
+            ", settingKey='" + settingKey + '\'' +
+            ", settingValue='" + settingValue + '\'' +
             '}';
   }
 }

@@ -1,6 +1,6 @@
 package com.jeetprksh.pcconnect.http.requests;
 
-import com.jeetprksh.pcconnect.client.ApiUrl;
+import com.jeetprksh.pcconnect.http.ApiUrl;
 import com.jeetprksh.pcconnect.http.PCConnectRequest;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;

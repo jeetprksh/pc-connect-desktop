@@ -1,4 +1,4 @@
-package com.jeetprksh.pcconnect.persistence.dao;
+package com.jeetprksh.pcconnect.persistence;
 
 import com.jeetprksh.pcconnect.persistence.PersistenceConfig;
 
@@ -17,7 +17,7 @@ public class CommonDao {
 
   private final SessionFactory sessionFactory;
 
-  CommonDao() {
+  public CommonDao() {
     sessionFactory = PersistenceConfig.getSessionFactory();
   }
 

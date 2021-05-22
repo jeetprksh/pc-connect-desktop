@@ -1,5 +1,6 @@
 package com.jeetprksh.pcconnect.persistence;
 
+import com.jeetprksh.pcconnect.settings.SettingDTO;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -26,7 +27,7 @@ public class PersistenceConfig {
       StandardServiceRegistry standardRegistry =
               new StandardServiceRegistryBuilder().applySettings(getConfig()).build();
       Metadata metaData = new MetadataSources(standardRegistry)
-              .addAnnotatedClass(com.jeetprksh.pcconnect.persistence.dto.SettingDTO.class)
+              .addAnnotatedClass(SettingDTO.class)
               .getMetadataBuilder()
               .build();
       sessionFactory = metaData.getSessionFactoryBuilder().build();

@@ -1,12 +1,13 @@
-package com.jeetprksh.pcconnect.client;
+package com.jeetprksh.pcconnect.http;
 
-import com.jeetprksh.pcconnect.client.pojo.Item;
-import com.jeetprksh.pcconnect.client.pojo.ItemResponse;
-import com.jeetprksh.pcconnect.client.pojo.OnlineUser;
-import com.jeetprksh.pcconnect.client.pojo.OnlineUserResponse;
-import com.jeetprksh.pcconnect.client.pojo.User;
-import com.jeetprksh.pcconnect.client.pojo.VerifiedUser;
-import com.jeetprksh.pcconnect.client.pojo.VerifyResponse;
+import com.jeetprksh.pcconnect.websocket.WebSocketConnection;
+import com.jeetprksh.pcconnect.http.pojo.Item;
+import com.jeetprksh.pcconnect.http.pojo.ItemResponse;
+import com.jeetprksh.pcconnect.http.pojo.OnlineUser;
+import com.jeetprksh.pcconnect.http.pojo.OnlineUserResponse;
+import com.jeetprksh.pcconnect.http.pojo.User;
+import com.jeetprksh.pcconnect.http.pojo.VerifiedUser;
+import com.jeetprksh.pcconnect.http.pojo.VerifyResponse;
 import com.jeetprksh.pcconnect.http.requests.DownloadItemRequest;
 import com.jeetprksh.pcconnect.http.requests.GetItemRequest;
 import com.jeetprksh.pcconnect.http.requests.OnlineUsersRequest;
