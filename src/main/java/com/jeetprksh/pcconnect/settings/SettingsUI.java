@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 /**
  * @author Jeet Prakash
  */
-public class SettingsController {
+public class SettingsUI {
 
-  private final Logger logger = Logger.getLogger(SettingsController.class.getName());
+  private final Logger logger = Logger.getLogger(SettingsUI.class.getName());
 
   private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
 

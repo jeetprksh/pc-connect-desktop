@@ -34,9 +34,9 @@ import java.util.Objects;
 import java.util.Stack;
 import java.util.logging.Logger;
 
-public class RootController implements UIObserver {
+public class RootUI implements UIObserver {
 
-  private final Logger logger = Logger.getLogger(RootController.class.getName());
+  private final Logger logger = Logger.getLogger(RootUI.class.getName());
 
   @FXML private TextField ipAddress;
   @FXML private TextField port;

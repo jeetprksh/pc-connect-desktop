@@ -1,6 +1,6 @@
 package com.jeetprksh.pcconnect;
 
-import com.jeetprksh.pcconnect.root.RootController;
+import com.jeetprksh.pcconnect.root.RootUI;
 import com.jeetprksh.pcconnect.persistence.PersistenceConfig;
 
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ public class App extends Application {
 
   private final Logger logger = Logger.getLogger(App.class.getName());
 
-  private RootController rootController;
+  private RootUI rootUI;
 
   public static void main(String[] args) {
     launch(args);
@@ -29,7 +29,7 @@ public class App extends Application {
     logger.info("Starting the PC Connect application");
     FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("pc-connect.fxml"));
     Parent root = loader.load();
-    this.rootController = loader.getController();
+    this.rootUI = loader.getController();
 
     primaryStage.setScene(new Scene(root));
     primaryStage.setTitle("PC Connect");
@@ -41,6 +41,6 @@ public class App extends Application {
   public void stop() {
     logger.info("Stopping the PC Connect application");
     PersistenceConfig.getSessionFactory().close();
-    this.rootController.close();
+    this.rootUI.close();
   }
 }
