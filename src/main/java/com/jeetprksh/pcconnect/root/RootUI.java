@@ -1,14 +1,19 @@
 package com.jeetprksh.pcconnect.root;
 
-import com.jeetprksh.pcconnect.http.PcConnectClient;
-import com.jeetprksh.pcconnect.websocket.WebSocketConnection;
+import com.jeetprksh.pcconnect.connect.ConnectUI;
+import com.jeetprksh.pcconnect.http.ApiUrl;
 import com.jeetprksh.pcconnect.http.pojo.Item;
 import com.jeetprksh.pcconnect.http.pojo.Message;
 import com.jeetprksh.pcconnect.http.pojo.OnlineUser;
 import com.jeetprksh.pcconnect.http.pojo.VerifiedUser;
+import com.jeetprksh.pcconnect.http.requests.DownloadItemRequest;
+import com.jeetprksh.pcconnect.http.requests.GetItemRequest;
+import com.jeetprksh.pcconnect.http.requests.OnlineUsersRequest;
+import com.jeetprksh.pcconnect.http.requests.UploadItemRequest;
+import com.jeetprksh.pcconnect.settings.SettingDTO;
 import com.jeetprksh.pcconnect.settings.SettingsDao;
 import com.jeetprksh.pcconnect.settings.SettingsDaoFactory;
-import com.jeetprksh.pcconnect.settings.SettingDTO;
+import com.jeetprksh.pcconnect.websocket.WebSocketConnection;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,12 +21,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.MenuBar;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
 
 import java.io.File;
 import java.io.InputStream;
@@ -38,43 +46,25 @@ public class RootUI implements UIObserver {
 
   private final Logger logger = Logger.getLogger(RootUI.class.getName());
 
-  @FXML private TextField ipAddress;
-  @FXML private TextField port;
-  @FXML private TextField name;
-  @FXML private PasswordField code;
-  @FXML private Button connect;
-  @FXML public Button sendToUser;
-  @FXML public Button refreshUsers;
+  @FXML private MenuBar menuBar;
+  @FXML private Button sendToUser;
+  @FXML private Button refreshUsers;
 
   @FXML private ListView<Item> items;
   @FXML private ListView<OnlineUser> users;
 
-  private PcConnectClient client;
+  private WebSocket webSocket;
   private VerifiedUser verifiedUser;
 
   private final Stack<Item> itemStack = new Stack<>();
   private final String ROOT_DIRECTORIES = "ROOT_DIRECTORIES";
   private final SettingsDao settingsDao = new SettingsDaoFactory().createSettingsDao();
-
-  public void connectServer() {
-    try {
-      logger.info("Connecting to the server at " + this.ipAddress.getText() + ":" + this.port.getText());
-      this.verifiedUser = getClient().verifyUser(this.name.getText(), this.code.getText());
-      WebSocketConnection webSocket = getClient().initializeSocket();
-      webSocket.setObserver(this);
-      initialiseItems();
-      renderRootDirectories();
-      renderUsers();
-    } catch (Exception ex) {
-      this.client = null;
-      ex.printStackTrace();
-      showError(ex.getLocalizedMessage());
-    }
-  }
+  private final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
   public void renderRootDirectories() throws Exception {
     logger.info("Rendering shared root directories");
-    List<Item> items = getClient().getRootItems();
+    GetItemRequest request = new GetItemRequest(createBaseUrl() + ApiUrl.GET_ITEMS.getUrl(), verifiedUser.getToken());
+    List<Item> items = request.execute().getItems();
     this.items.getItems().clear();
     this.items.getItems().addAll(items);
     itemStack.push(new Item(ROOT_DIRECTORIES, false, false, null, null));
@@ -102,8 +92,10 @@ public class RootUI implements UIObserver {
     if (Objects.isNull(item) || item.isDirectory()) {
       throw new Exception("Either no item was selected or the selected item was not a file.");
     }
-    try(InputStream stream = getClient()
-            .downloadItem(item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()))) {
+
+    DownloadItemRequest request = new DownloadItemRequest(createBaseUrl(), verifiedUser.getToken(),
+            item.getRootAlias(), URLEncoder.encode(item.getPath(), StandardCharsets.UTF_8.name()));
+    try(InputStream stream = request.execute()) {
       String filePath = getDownloadDirectory() + File.separator + item.getName();
       Files.copy(stream, (new File(filePath)).toPath(), StandardCopyOption.REPLACE_EXISTING);
       logger.info("Downloaded the file at path " + filePath);
@@ -127,13 +119,21 @@ public class RootUI implements UIObserver {
 
     try {
       if (!Objects.isNull(selectedDirectory)) {
-        getClient().uploadItem(selectedDirectory, item.getRootAlias(), item.getPath());
+        UploadItemRequest request = new UploadItemRequest(createBaseUrl(), verifiedUser.getToken(), selectedDirectory, item.getRootAlias(), item.getPath());
+        request.execute();
       }
     } catch (Exception ex) {
       logger.severe("Failed to upload the item " + ex.getLocalizedMessage());
       ex.printStackTrace();
       showError(ex.getLocalizedMessage());
     }
+  }
+
+  private String createBaseUrl() {
+    StringBuilder url = new StringBuilder();
+    return url.append("http://")
+            .append(verifiedUser.getIpAddress()).append(":").append(verifiedUser.getPort())
+            .toString();
   }
 
   private String askForDirectory() {
@@ -143,7 +143,28 @@ public class RootUI implements UIObserver {
   }
 
   private List<Item> getItems(String rootId, String path) throws Exception {
-    return getClient().getItems(rootId, path);
+    GetItemRequest request = new GetItemRequest(createBaseUrl() + String.format(ApiUrl.GET_ITEMS_PATH.getUrl(), rootId, path), verifiedUser.getToken());
+    return request.execute().getItems();
+  }
+
+  public void postConnectSuccess(VerifiedUser verifiedUser) throws Exception {
+    this.verifiedUser = verifiedUser;
+    initializeWebSocket();
+    initialiseItems();
+    renderRootDirectories();
+    renderUsers();
+  }
+
+  private void initializeWebSocket() {
+    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
+            .addHeader("token", this.verifiedUser.getToken()).build();
+    webSocket = client.newWebSocket(wsRequest, socketConnection);
+    socketConnection.setObserver(this);
+  }
+
+  public void postConnectFail(String errorMessage) {
+    showError(errorMessage);
   }
 
   private void initialiseItems() {
@@ -187,6 +208,24 @@ public class RootUI implements UIObserver {
     }
   }
 
+  public void openConnect() {
+    try {
+      logger.info("Opening settings screen");
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pc-connect-connect.fxml"));
+      Parent connectUI = fxmlLoader.load();
+      Stage stage = new Stage();
+      stage.setTitle("Connect");
+      stage.setScene(new Scene(connectUI));
+      stage.show();
+
+      ConnectUI connectUi = fxmlLoader.getController();
+      connectUi.setParent(this);
+    } catch (Exception ex) {
+      logger.severe("Failed to open settings screen " + ex.getLocalizedMessage());
+      ex.printStackTrace();
+    }
+  }
+
   public void openSettings() {
     try {
       logger.info("Opening settings screen");
@@ -202,7 +241,8 @@ public class RootUI implements UIObserver {
   }
 
   public void renderUsers() throws Exception {
-    List<OnlineUser> onlineUsers = getClient().getOnlineUsers();
+    OnlineUsersRequest request = new OnlineUsersRequest(createBaseUrl(), verifiedUser.getToken());
+    List<OnlineUser> onlineUsers = request.execute().getOnlineUsers();
     onlineUsers.forEach(ou -> {
       if (ou.getUserId().equalsIgnoreCase(this.verifiedUser.getId())) {
         ou.setUserName(ou.getUserName() + " (You)");
@@ -229,14 +269,9 @@ public class RootUI implements UIObserver {
 
   public void close() {
     logger.info("Closing Root controller");
-    getClient().closeSocket();
-  }
-
-  private PcConnectClient getClient() {
-    if (Objects.isNull(this.client)) {
-      this.client = PcConnectClient.clientFactory(this.ipAddress.getText(), this.port.getText());
+    if (!Objects.isNull(webSocket)) {
+      webSocket.close(1001, "Client logging out");
     }
-    return this.client;
   }
 
   private void showError(String message) {
@@ -244,5 +279,9 @@ public class RootUI implements UIObserver {
     alert.setTitle("Error");
     alert.setContentText(message);
     alert.showAndWait();
+  }
+
+  public void handleKeyInput(KeyEvent keyEvent) {
+
   }
 }
