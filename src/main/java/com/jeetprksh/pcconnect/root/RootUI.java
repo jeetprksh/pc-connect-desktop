@@ -130,10 +130,8 @@ public class RootUI implements UIObserver {
   }
 
   private String createBaseUrl() {
-    StringBuilder url = new StringBuilder();
-    return url.append("http://")
-            .append(verifiedUser.getIpAddress()).append(":").append(verifiedUser.getPort())
-            .toString();
+    return "http://" +
+            verifiedUser.getIpAddress() + ":" + verifiedUser.getPort();
   }
 
   private String askForDirectory() {
@@ -211,7 +209,7 @@ public class RootUI implements UIObserver {
   public void openConnect() {
     try {
       logger.info("Opening settings screen");
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pc-connect-connect.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("pc-connect-connect.fxml"));
       Parent connectUI = fxmlLoader.load();
       Stage stage = new Stage();
       stage.setTitle("Connect");
