@@ -5,7 +5,7 @@
 
 <GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="225.0" prefWidth="490.0" vgap="10"
           xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.jeetprksh.pcconnect.connect.ConnectUi">
+          fx:controller="com.jeetprksh.pcconnect.connect.ConnectUI">
   <columnConstraints>
     <ColumnConstraints/>
   </columnConstraints>

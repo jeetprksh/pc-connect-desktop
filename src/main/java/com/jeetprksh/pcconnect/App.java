@@ -27,7 +27,7 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     logger.info("Starting the PC Connect application");
-    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("pc-connect.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("pc-connect-root.fxml"));
     Parent root = loader.load();
     this.rootUI = loader.getController();
 
