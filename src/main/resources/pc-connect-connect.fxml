@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="225.0" prefWidth="490.0" vgap="10"
+          xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.jeetprksh.pcconnect.connect.ConnectUi">
+  <columnConstraints>
+    <ColumnConstraints/>
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints/>
+    <RowConstraints/>
+  </rowConstraints>
+  <Pane prefHeight="265.0" prefWidth="487.0">
+    <TextField fx:id="ipAddress" cache="true" layoutX="20.0" layoutY="5.0" prefHeight="40.0" prefWidth="120.0" promptText="IP Address"/>
+    <TextField fx:id="port" cache="true" layoutX="150.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Port"/>
+    <TextField fx:id="name" layoutX="280.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Name"/>
+    <PasswordField fx:id="code" layoutX="370.0" layoutY="5.0" prefHeight="40.0" prefWidth="80.0" promptText="Code"/>
+    <Button fx:id="connect" graphicTextGap="12.0" layoutX="485.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#connectServer" prefHeight="40.0" prefWidth="100.0" text="Connect" textAlignment="CENTER"/>
+  </Pane>
+</GridPane>
