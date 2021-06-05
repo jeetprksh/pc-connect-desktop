@@ -14,6 +14,7 @@ import com.jeetprksh.pcconnect.settings.SettingDTO;
 import com.jeetprksh.pcconnect.settings.SettingsDao;
 import com.jeetprksh.pcconnect.settings.SettingsDaoFactory;
 import com.jeetprksh.pcconnect.websocket.WebSocketConnection;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +23,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -279,7 +279,7 @@ public class RootUI implements UIObserver {
     alert.showAndWait();
   }
 
-  public void handleKeyInput(KeyEvent keyEvent) {
-
+  public void closeRoot(ActionEvent event) {
+    ((Stage) menuBar.getScene().getWindow()).close();
   }
 }

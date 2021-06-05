@@ -15,11 +15,11 @@
       <RowConstraints maxHeight="250.0" minHeight="166.2" prefHeight="250.0"/>
    </rowConstraints>
    <Pane maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="700.0">
-      <MenuBar fx:id="menuBar" onKeyPressed="#handleKeyInput" prefWidth="612.0">
+      <MenuBar fx:id="menuBar" prefWidth="612.0">
          <Menu text="Options">
             <MenuItem text="Connect" onAction="#openConnect"/>
             <MenuItem text="Settings" onAction="#openSettings"/>
-            <MenuItem text="Exit"/>
+            <MenuItem text="Exit" onAction="#closeRoot"/>
          </Menu>
       </MenuBar>
    </Pane>
