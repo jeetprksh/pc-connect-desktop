@@ -129,22 +129,6 @@ public class RootUI implements UIObserver {
     }
   }
 
-  private String createBaseUrl() {
-    return "http://" +
-            verifiedUser.getIpAddress() + ":" + verifiedUser.getPort();
-  }
-
-  private String askForDirectory() {
-    DirectoryChooser directoryChooser = new DirectoryChooser();
-    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-    return directoryChooser.showDialog(null).getAbsolutePath();
-  }
-
-  private List<Item> getItems(String rootId, String path) throws Exception {
-    GetItemRequest request = new GetItemRequest(createBaseUrl() + String.format(ApiUrl.GET_ITEMS_PATH.getUrl(), rootId, path), verifiedUser.getToken());
-    return request.execute().getItems();
-  }
-
   public void postConnectSuccess(VerifiedUser verifiedUser) throws Exception {
     this.verifiedUser = verifiedUser;
     initializeWebSocket();
@@ -153,47 +137,8 @@ public class RootUI implements UIObserver {
     renderUsers();
   }
 
-  private void initializeWebSocket() {
-    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
-    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
-            .addHeader("token", this.verifiedUser.getToken()).build();
-    webSocket = client.newWebSocket(wsRequest, socketConnection);
-    socketConnection.setObserver(this);
-  }
-
   public void postConnectFail(String errorMessage) {
     showError(errorMessage);
-  }
-
-  private void initialiseItems() {
-    this.items.setOnMouseClicked(event -> {
-      if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-        Item selectedItem = items.getSelectionModel().getSelectedItem();
-        refreshList(selectedItem.getRootAlias(), selectedItem.getPath());
-        itemStack.push(selectedItem);
-      }
-    });
-  }
-
-  private void refreshList(String rootAlias, String path) {
-    try {
-      List<Item> items = getItems(rootAlias, URLEncoder.encode(path, StandardCharsets.UTF_8.name()));
-      this.items.getItems().clear();
-      this.items.getItems().addAll(items);
-    } catch (Exception e) {
-      e.printStackTrace();
-      showError(e.getLocalizedMessage());
-    }
-  }
-
-  private String getDownloadDirectory() {
-    List<SettingDTO> allSettings = settingsDao.findAll();
-    if (allSettings.isEmpty()) {
-      return askForDirectory();
-    } else {
-      return Objects.isNull(allSettings.get(0).getSettingValue())
-              ? askForDirectory() : allSettings.get(0).getSettingValue();
-    }
   }
 
   public void refreshDirectory() throws Exception {
@@ -227,10 +172,11 @@ public class RootUI implements UIObserver {
   public void openSettings() {
     try {
       logger.info("Opening settings screen");
-      Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("pc-connect-settings.fxml"));
+      Parent settingsUI = fxmlLoader.load();
       Stage stage = new Stage();
       stage.setTitle("Settings");
-      stage.setScene(new Scene(root));
+      stage.setScene(new Scene(settingsUI));
       stage.show();
     } catch (Exception ex) {
       logger.severe("Failed to open settings screen " + ex.getLocalizedMessage());
@@ -272,14 +218,68 @@ public class RootUI implements UIObserver {
     }
   }
 
+  public void closeRoot(ActionEvent event) {
+    ((Stage) menuBar.getScene().getWindow()).close();
+  }
+
+  private String createBaseUrl() {
+    return "http://" + verifiedUser.getIpAddress() + ":" + verifiedUser.getPort();
+  }
+
+  private String askForDirectory() {
+    DirectoryChooser directoryChooser = new DirectoryChooser();
+    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    return directoryChooser.showDialog(null).getAbsolutePath();
+  }
+
+  private List<Item> getItems(String rootId, String path) throws Exception {
+    GetItemRequest request = new GetItemRequest(createBaseUrl() + String.format(ApiUrl.GET_ITEMS_PATH.getUrl(), rootId, path), verifiedUser.getToken());
+    return request.execute().getItems();
+  }
+
+  private void initializeWebSocket() {
+    WebSocketConnection socketConnection =  new WebSocketConnection(this.verifiedUser);
+    Request wsRequest = new Request.Builder().url(createBaseUrl() + "/websocket")
+            .addHeader("token", this.verifiedUser.getToken()).build();
+    webSocket = client.newWebSocket(wsRequest, socketConnection);
+    socketConnection.setObserver(this);
+  }
+
+  private void initialiseItems() {
+    this.items.setOnMouseClicked(event -> {
+      if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+        Item selectedItem = items.getSelectionModel().getSelectedItem();
+        refreshList(selectedItem.getRootAlias(), selectedItem.getPath());
+        itemStack.push(selectedItem);
+      }
+    });
+  }
+
+  private void refreshList(String rootAlias, String path) {
+    try {
+      List<Item> items = getItems(rootAlias, URLEncoder.encode(path, StandardCharsets.UTF_8.name()));
+      this.items.getItems().clear();
+      this.items.getItems().addAll(items);
+    } catch (Exception e) {
+      e.printStackTrace();
+      showError(e.getLocalizedMessage());
+    }
+  }
+
+  private String getDownloadDirectory() {
+    List<SettingDTO> allSettings = settingsDao.findAll();
+    if (allSettings.isEmpty()) {
+      return askForDirectory();
+    } else {
+      return Objects.isNull(allSettings.get(0).getSettingValue())
+              ? askForDirectory() : allSettings.get(0).getSettingValue();
+    }
+  }
+
   private void showError(String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Error");
     alert.setContentText(message);
     alert.showAndWait();
-  }
-
-  public void closeRoot(ActionEvent event) {
-    ((Stage) menuBar.getScene().getWindow()).close();
   }
 }
