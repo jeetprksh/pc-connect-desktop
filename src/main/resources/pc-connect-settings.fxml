@@ -3,20 +3,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="225.0" prefWidth="490.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jeetprksh.pcconnect.settings.SettingsUI">
+<GridPane id="listView" alignment="TOP_CENTER" hgap="10" prefHeight="225.0" prefWidth="490.0" vgap="10"
+          xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.jeetprksh.pcconnect.settings.SettingsUI">
   <columnConstraints>
-    <ColumnConstraints />
+    <ColumnConstraints/>
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints />
-    <RowConstraints />
+    <RowConstraints/>
+    <RowConstraints/>
   </rowConstraints>
-   <children>
-      <Pane prefHeight="265.0" prefWidth="487.0">
-         <children>
-            <TextField id="downloadDirectory" fx:id="downloadDirectory" layoutX="35.0" layoutY="20.0" prefHeight="30.0" prefWidth="320.0" promptText="Download Directory" />
-            <Button fx:id="browse" layoutX="377.0" layoutY="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Browse" onMouseClicked="#browseDownloadDirectory" />
-            <Button id="save" fx:id="save" layoutX="199.0" layoutY="182.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Save" onMouseClicked="#saveSettings" />
-         </children></Pane>
-   </children>
+  <Pane prefHeight="265.0" prefWidth="487.0">
+    <TextField id="downloadDirectory" fx:id="downloadDirectory" layoutX="35.0" layoutY="20.0" prefHeight="30.0" prefWidth="320.0" promptText="Download Directory"/>
+    <Button fx:id="browse" layoutX="377.0" layoutY="20.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Browse" onMouseClicked="#browseDownloadDirectory"/>
+    <Button id="save" fx:id="save" layoutX="199.0" layoutY="182.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Save" onMouseClicked="#saveSettings"/>
+  </Pane>
 </GridPane>
